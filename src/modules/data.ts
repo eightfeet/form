@@ -9,6 +9,12 @@ export const fields: Filed[] = [
       type: "tel",
     },
     {
+      name: "姓名6",
+      field: "name6",
+      value: "name value6",
+      type: "picker",
+    },
+    {
       name: "姓名2",
       field: "name2",
       value: "name value2",

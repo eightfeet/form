@@ -2,14 +2,15 @@ export enum FieldType {
     Tel = "tel",
     Radio = "radio",
     Checkbox = "checkbox",
-    Select = "select"
+    Select = "select",
+    Picker = "picker"
 }
 
 export interface Filed {
     name: string;
     field: string;
     value: string;
-    type?: "tel" | "radio" | "checkbox" | "select";
+    type?: "tel" | "radio" | "checkbox" | "select" | "picker";
     options?: Option[]
 }
 

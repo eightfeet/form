@@ -42,6 +42,11 @@ export default ({
     if (item.type === FieldType.Radio) {
       onChangeRadio(item, form);
     }
+
+    if (item.type === FieldType.Picker) {
+      handlePicker(item, form);
+    }
+    
   });
 
   form.onsubmit = (e) => {
@@ -64,6 +69,8 @@ export const render = (config: Filed) => {
       return renderCheckbox(config);
     case FieldType.Select:
       return renderSelect(config);
+    case FieldType.Picker:
+      return renderPicker(config);
     default:
       return renderInput(config);
   }
@@ -157,6 +164,15 @@ export const renderCheckbox = ({ name, field, value, options }: Filed) => {
   `;
 };
 
+export const renderPicker = ({ name, field, value, type }: Filed) => {
+  return html`
+    <li>
+      <label for="${field}">${name}:</label>
+      <input readyonly id="${field}" name="${field}" value="${value}" />
+    </li>
+  `;
+};
+
 const onChangeCheckbox = (item: Filed, form: HTMLFormElement) => {
   item.options.forEach((el, i) => {
     const checkbox: HTMLInputElement = form.querySelector(`#${item.field}${i}`);
@@ -188,3 +204,12 @@ const onChangeRadio = (item: Filed, form: HTMLFormElement) => {
     };
   });
 };
+
+
+const handlePicker = (item: Filed, form: HTMLFormElement) => {
+  const target: HTMLInputElement = form.querySelector(`#${item.field}`);
+  target.onclick = () => {
+    target.blur();
+    console.log(22222)
+  }
+}
