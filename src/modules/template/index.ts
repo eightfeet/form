@@ -2,6 +2,7 @@ import s from "./form.scss";
 import { html } from "common-tags";
 import { checkType } from "./../helper";
 import { Filed, FieldType, Option } from "~/types/data";
+import Picker, {Option as pickerOption, Wheels} from "@eightfeet/picker";
 
 export default ({
   id,
@@ -46,7 +47,6 @@ export default ({
     if (item.type === FieldType.Picker) {
       handlePicker(item, form);
     }
-    
   });
 
   form.onsubmit = (e) => {
@@ -93,10 +93,7 @@ export const renderSelect = ({ name, field, value, options }: Filed) => {
         <option>请选择</option>
         ${options.map(
           (item: Option, index: number) => html`
-            <option
-              value="${item.value}"
-              ${item.value === value && "selected"}
-            >
+            <option value="${item.value}" ${item.value === value && "selected"}>
               ${item.label}
             </option>
           `
@@ -205,11 +202,57 @@ const onChangeRadio = (item: Filed, form: HTMLFormElement) => {
   });
 };
 
-
 const handlePicker = (item: Filed, form: HTMLFormElement) => {
   const target: HTMLInputElement = form.querySelector(`#${item.field}`);
+  const wheels: Wheels<{
+    display: 'date',
+    value: 'val'
+  }> = [
+    {
+        data: [
+            { val: 0, date: '周日' },
+            { val: 1, date: '周一' },
+            { val: 2, date: '周二' },
+            { val: 3, date: '周三' },
+            { val: 4, date: '周四' },
+            { val: 5, date: '周五' },
+            { val: 6, date: '周六' }
+        ]
+    },
+    {
+        data: [
+            { val: 8, date: '08:00' },
+            { val: 9, date: '09:00' },
+            { val: 10, date: '10:00' },
+            { val: 11, date: '11:00' },
+            { val: 12, date: '12:00' },
+            { val: 13, date: '13:00' },
+            { val: 14, date: '14:00' }
+        ]
+    }
+];
+  const parames: pickerOption = {
+    wheels,
+    trigger: `#${item.field}`,
+    keyMap: { display: 'date', value: 'val'},
+    cancelBtnText: 'cancel',
+    confirmBtnText: 'ensure',
+    title: 'json类型',
+    style: {
+        wrap: {
+            color: '#444'
+        },
+        mask: {
+            height: '50em'
+        }
+    }
+}
+  
+
+  const datePicker = new Picker(parames);
   target.onclick = () => {
     target.blur();
-    console.log(22222)
-  }
-}
+    datePicker.showPicker([2,9]);
+    console.log(22222);
+  };
+};
