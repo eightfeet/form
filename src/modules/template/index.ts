@@ -32,9 +32,9 @@ export default ({
   form.classList.add(s.form);
   form.innerHTML = htmlString;
   rootDom.appendChild(form);
-  
+
   // 绑定事件
-  fields.forEach((item) => {
+  fields.forEach((item: Filed) => {
     if (item.type === FieldType.Checkbox) {
       onChangeCheckbox(item, form);
     }
@@ -62,6 +62,8 @@ export const render = (config: Filed) => {
       return renderRadio(config);
     case FieldType.Checkbox:
       return renderCheckbox(config);
+    case FieldType.Select:
+      return renderSelect(config);
     default:
       return renderInput(config);
   }
@@ -76,12 +78,38 @@ export const renderInput = ({ name, field, value, type }: Filed) => {
   `;
 };
 
+export const renderSelect = ({ name, field, value, options }: Filed) => {
+  return html`
+    <li>
+      <label for="${field}">${name}:</label>
+      <select name="${field}">
+        <option>请选择</option>
+        ${options.map(
+          (item: Option, index: number) => html`
+            <option
+              value="${item.value}"
+              ${item.value === value && "selected"}
+            >
+              ${item.label}
+            </option>
+          `
+        )}
+      </select>
+    </li>
+  `;
+};
+
 export const renderRadio = ({ name, options, field, value }: Filed) => {
   return html`
     <li>
       <span>${name}:</span>
       <div>
-        <input type="hidden" id="${field}" name="${field}" value="${value}" />
+        <input
+          style="display:none"
+          id="${field}"
+          name="${field}"
+          value="${value}"
+        />
         ${options.map(
           (item: Option, index: number) => html`
             <label>
@@ -105,7 +133,12 @@ export const renderCheckbox = ({ name, field, value, options }: Filed) => {
     <li>
       <span>${name}:</span>
       <div>
-        <input type="hidden" id="${field}" name="${field}" value="${value}" />
+        <input
+          style="display:none"
+          id="${field}"
+          name="${field}"
+          value="${value}"
+        />
         ${options.map(
           (item: Option, index: number) => html`
             <label>
@@ -124,7 +157,7 @@ export const renderCheckbox = ({ name, field, value, options }: Filed) => {
   `;
 };
 
-const onChangeCheckbox = (item, form: HTMLFormElement) => {
+const onChangeCheckbox = (item: Filed, form: HTMLFormElement) => {
   item.options.forEach((el, i) => {
     const checkbox: HTMLInputElement = form.querySelector(`#${item.field}${i}`);
     checkbox.onchange = function () {
@@ -143,8 +176,8 @@ const onChangeCheckbox = (item, form: HTMLFormElement) => {
   });
 };
 
-const onChangeRadio = (item, form: HTMLFormElement) => {
-  item.options.forEach((el: { name: string; value: string }, i: number) => {
+const onChangeRadio = (item: Filed, form: HTMLFormElement) => {
+  item.options.forEach((el: Option, i: number) => {
     const radio: HTMLInputElement = form.querySelector(`#${item.field}${i}`);
     radio.onchange = function () {
       if (radio.checked === true) {

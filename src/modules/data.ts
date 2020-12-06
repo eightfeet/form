@@ -14,10 +14,30 @@ export const fields: Filed[] = [
       value: "name value2",
     },
     {
+      name: "姓名5",
+      field: "name5",
+      value: "1,2",
+      type: "checkbox",
+      options: [
+        {
+          label: "a",
+          value: "1",
+        },
+        {
+          label: "b",
+          value: "2",
+        },
+        {
+          label: "c",
+          value: "3",
+        },
+      ],
+    },
+    {
       name: "姓名3",
       field: "name3",
-      value: "1,3",
-      type: "checkbox",
+      value: "2",
+      type: "select",
       options: [
         {
           label: "a",
