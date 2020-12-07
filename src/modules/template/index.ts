@@ -2,7 +2,7 @@ import s from './form.scss';
 import { html } from 'common-tags';
 import { checkType } from './../helper';
 import { Filed, FieldType, Option } from '~/types/data';
-import Picker, { Option as pickerOption, Wheels } from '@eightfeet/picker';
+import Picker, { Option as pickerOption } from '@eightfeet/picker';
 
 export default ({
     id,
@@ -63,6 +63,15 @@ export default ({
         });
         onSubmit(result);
     };
+
+    form.onreset = (e) => {
+      fields.forEach(({field, type}) => {
+        if (type === FieldType.Picker) {
+          const fieldDOM = document.getElementById(field) as HTMLButtonElement;
+          fieldDOM.innerText = fieldDOM.value = fieldDOM.getAttribute('data-default-value');
+        }
+    });
+    }
 };
 
 export const render = (config: Filed) => {
@@ -178,7 +187,7 @@ export const renderPicker = ({ name, field, value, type }: Filed) => {
     return html`
         <li>
             <label for="${field}">${name}:</label>
-            <button id="${field}" value="${value}">${value}</button>
+            <button id="${field}" data-default-value="${value}" value="${value}">${value}</button>
         </li>
     `;
 };
@@ -233,7 +242,7 @@ const handlePicker = (item: Filed, form: HTMLFormElement) => {
     }> = {
         wheels,
         trigger: `#${item.field}`,
-        keyMap: { display: 'date', value: 'val' },
+        keyMap: { display: 'date', value: 'val', childs: 'childs' },
         cancelBtnText: '取消',
         confirmBtnText: '确定',
         title: 'json类型',
