@@ -1,3 +1,5 @@
+import { Wheels } from "@eightfeet/picker";
+
 export enum FieldType {
     Tel = "tel",
     Radio = "radio",
@@ -11,10 +13,12 @@ export interface Filed {
     field: string;
     value: string;
     type?: "tel" | "radio" | "checkbox" | "select" | "picker";
-    options?: Option[]
+    options?: Option []
 }
 
 export interface Option {
-    label: string,
-    value: string
+    label?: string,
+    value?: string,
+    data?: any
 }
+
