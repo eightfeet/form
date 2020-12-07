@@ -1,5 +1,3 @@
-import { Wheels } from "@eightfeet/picker";
-
 export enum FieldType {
     Tel = "tel",
     Radio = "radio",
