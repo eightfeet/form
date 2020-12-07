@@ -11,7 +11,13 @@ export interface Filed {
     field: string;
     value: string;
     type?: "tel" | "radio" | "checkbox" | "select" | "picker";
-    options?: Option []
+    options?: Option [],
+    keyMap?: { 
+        [keys: string]: any
+    };
+    cancelBtnText?: string;
+    confirmBtnText?: string;
+    title?: string;
 }
 
 export interface Option {
