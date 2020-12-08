@@ -3,6 +3,7 @@ import { html } from "common-tags";
 import { checkType } from "./../helper";
 import { Filed, FieldType, Option } from "~/types/data";
 import Picker, { Option as pickerOption } from "@eightfeet/picker";
+import { fields } from "../data";
 
 export default ({
   id,
@@ -264,9 +265,12 @@ const handlePicker = (item: Filed, form: HTMLFormElement) => {
   const datePicker = new Picker(parames);
   target.onclick = (e) => {
     target.blur();
+    let dataValue: any[] = (e.target as HTMLInputElement).value.split(",");
     // 如何定义数据类型 ？？？？？？？？？？
-    const dataValue = (e.target as HTMLInputElement).value.split(",");
-    const selected = dataValue.map((i) => parseInt(i));
-    datePicker.showPicker(selected);
+    if (typeof item.options[0].data[0][item.keyMap.value] === 'number') {
+      dataValue = dataValue.map((i) => parseInt(i));
+    }
+    
+    datePicker.showPicker(dataValue);
   };
 };
