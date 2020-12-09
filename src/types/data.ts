@@ -10,6 +10,7 @@ export interface Filed {
     name: string;
     field: string;
     value: string;
+    defaultDisplay?: string;
     type?: "tel" | "radio" | "checkbox" | "select" | "picker";
     options?: Option [],
     keyMap?: { 

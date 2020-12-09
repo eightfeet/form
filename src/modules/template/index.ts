@@ -191,7 +191,7 @@ export const renderCheckbox = ({ name, field, value, options }: Filed) => {
   `;
 };
 
-export const renderPicker = ({ name, field, value, type }: Filed) => {
+export const renderPicker = ({ name, field, value, defaultDisplay, type }: Filed) => {
   return html`
     <li class="form_item">
       <label class="form_item_label" for="${field}">${name}:</label>
@@ -201,7 +201,7 @@ export const renderPicker = ({ name, field, value, type }: Filed) => {
         data-default-value="${value}"
         value="${value}"
       >
-        ${value}
+        ${defaultDisplay || value}
       </button>
     </li>
   `;
@@ -258,8 +258,8 @@ const handlePicker = (item: Filed, form: HTMLFormElement) => {
     confirmBtnText,
     title,
     onConfirm: (data) => {
-      target.value = data.map((el) => el.val).join(",");
-      target.innerText = target.value;
+      target.value = data.map((el) => el[item.keyMap.value]).join(",");
+      target.innerText = data.map((el) => el[item.keyMap.display]).join(",");
     },
   };
   const datePicker = new Picker(parames);

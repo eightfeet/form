@@ -12,6 +12,7 @@ export const fields: Filed[] = [
         field: 'name6',
         value: '4,12',
         type: 'picker',
+        defaultDisplay: '星期四,12:00',
         keyMap: { display: 'date', value: 'val', childs: 'childs' },
         cancelBtnText: '取消',
         confirmBtnText: '确定',
@@ -75,6 +76,7 @@ export const fields: Filed[] = [
         cancelBtnText: '取消',
         confirmBtnText: '确定',
         title: '时间',
+        defaultDisplay: '周三',
         options: [
             {
                 data: [
