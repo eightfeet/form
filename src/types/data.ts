@@ -19,6 +19,7 @@ export interface Filed {
     cancelBtnText?: string;
     confirmBtnText?: string;
     title?: string;
+    splitSymbol?: string;
 }
 
 export interface Option {

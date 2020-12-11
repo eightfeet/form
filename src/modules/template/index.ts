@@ -268,12 +268,12 @@ const handlePicker = (item: Filed, form: HTMLFormElement) => {
       console.log('data', data)
       if (!item.keyMap?.value) {
         target.value = data.join(",");
-        target.innerText = data.join(",");
+        target.innerText = data.join(item.splitSymbol);
         target.setAttribute('data-display', target.innerText)
         return;
       }
       target.value = data.map((el) => el[item.keyMap.value]).join(",");
-      target.innerText = data.map((el) => el[item.keyMap.display]).join(",");
+      target.innerText = data.map((el) => el[item.keyMap.display]).join(item.splitSymbol);
       target.setAttribute('data-display', target.innerText)
     },
   };
