@@ -3,9 +3,8 @@ import { html } from "common-tags";
 import { checkType } from "./../helper";
 import { Filed, FieldType, Option } from "~/types/data";
 import Picker, { Option as pickerOption } from "@eightfeet/picker";
-import { fields } from "../data";
 
-export default ({
+export default async ({
   id,
   parentId,
   fields,
@@ -38,7 +37,6 @@ export default ({
   form.classList.add(s.form);
   form.innerHTML = htmlString;
   rootDom.appendChild(form);
-
   // 绑定事件
   fields.forEach((item: Filed) => {
     if (item.type === FieldType.Checkbox) {
@@ -75,9 +73,10 @@ export default ({
     fields.forEach(({ field, type }) => {
       if (type === FieldType.Picker) {
         const fieldDOM = document.getElementById(field) as HTMLButtonElement;
-        fieldDOM.innerText = fieldDOM.value = fieldDOM.getAttribute(
-          "data-default-value"
-        );
+        const defaultVal = fieldDOM.getAttribute("data-default-value");
+        const defaultText = fieldDOM.getAttribute("data-default-display");
+        fieldDOM.value = defaultVal;
+        fieldDOM.innerText = defaultText;
       }
     });
   };
@@ -191,7 +190,13 @@ export const renderCheckbox = ({ name, field, value, options }: Filed) => {
   `;
 };
 
-export const renderPicker = ({ name, field, value, defaultDisplay, type }: Filed) => {
+export const renderPicker = ({
+  name,
+  field,
+  value,
+  defaultDisplay,
+  type,
+}: Filed) => {
   return html`
     <li class="form_item">
       <label class="form_item_label" for="${field}">${name}:</label>
@@ -199,7 +204,9 @@ export const renderPicker = ({ name, field, value, defaultDisplay, type }: Filed
         class="form_item_button"
         id="${field}"
         data-default-value="${value}"
+        data-default-display="${defaultDisplay || value}"
         value="${value}"
+        data-display="${defaultDisplay || value}"
       >
         ${defaultDisplay || value}
       </button>
@@ -258,19 +265,32 @@ const handlePicker = (item: Filed, form: HTMLFormElement) => {
     confirmBtnText,
     title,
     onConfirm: (data) => {
+      console.log('data', data)
+      if (!item.keyMap?.value) {
+        target.value = data.join(",");
+        target.innerText = data.join(",");
+        target.setAttribute('data-display', target.innerText)
+        return;
+      }
       target.value = data.map((el) => el[item.keyMap.value]).join(",");
       target.innerText = data.map((el) => el[item.keyMap.display]).join(",");
+      target.setAttribute('data-display', target.innerText)
     },
   };
   const datePicker = new Picker(parames);
+  window[item.field] = datePicker;
   target.onclick = (e) => {
     target.blur();
     let dataValue: any[] = (e.target as HTMLInputElement).value.split(",");
-    // 如何定义数据类型 ？？？？？？？？？？
-    if (typeof item.options[0].data[0][item.keyMap.value] === 'number') {
-      dataValue = dataValue.map((i) => parseInt(i));
+    if (!item.keyMap?.value) {
+      if (typeof item.options[0].data[0] === "number") {
+        dataValue = dataValue.map((i) => parseInt(i));
+      }
+    } else {
+      if (typeof item.options[0].data[0][item.keyMap.value] === "number") {
+        dataValue = dataValue.map((i) => parseInt(i));
+      }
     }
-    
     datePicker.showPicker(dataValue);
   };
 };
