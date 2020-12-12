@@ -248,7 +248,6 @@ const onChangeRadio = (item: Filed, form: HTMLFormElement) => {
 
 const handlePicker = (item: Filed, form: HTMLFormElement) => {
   const target: HTMLInputElement = form.querySelector(`#${item.field}`);
-  console.log(item.options);
   const wheels: any = item.options;
   const keyMap: any = item.keyMap;
   const cancelBtnText: string = item.cancelBtnText;
@@ -265,7 +264,6 @@ const handlePicker = (item: Filed, form: HTMLFormElement) => {
     confirmBtnText,
     title,
     onConfirm: (data) => {
-      console.log('data', data)
       if (!item.keyMap?.value) {
         target.value = data.join(",");
         target.innerText = data.join(item.splitSymbol);
