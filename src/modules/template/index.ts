@@ -9,7 +9,7 @@ export default async ({
   parentId,
   fields,
   onSubmit,
-  onReset
+  onReset,
 }: {
   id: string;
   parentId?: string;
@@ -17,6 +17,7 @@ export default async ({
   onSubmit: (data: { [keys: string]: any }) => void;
   onReset: () => void;
 }) => {
+  let validated: boolean = false;
   const rootDom = document.getElementById(parentId) || document.body;
   // 检查数据
   checkType(fields, "Array", "fields");
@@ -27,8 +28,12 @@ export default async ({
       ${fields.map((item) => render(item))}
       <li class="form_item ${s.formitem}">
         <ul class="form_button_wrap ${s.formbuttonwrap}">
-          <li class="form_submit form_button ${s.formbutton} ${s.formsubmit}"><input type="submit" value="Submit!" /></li>
-          <li class="form_reset form_button ${s.formbutton} ${s.formreset}"><input type="reset" value="Reset!" /></li>
+          <li class="form_submit form_button ${s.formbutton} ${s.formsubmit}">
+            <input type="submit" value="Submit!" />
+          </li>
+          <li class="form_reset form_button ${s.formbutton} ${s.formreset}">
+            <input type="reset" value="Reset!" />
+          </li>
         </ul>
       </li>
     </ul>
@@ -41,16 +46,20 @@ export default async ({
   rootDom.appendChild(form);
   // 绑定事件
   fields.forEach((item: Filed) => {
-    if (item.type === FieldType.Checkbox) {
-      onChangeCheckbox(item, form);
-    }
+    switch (item.type) {
+      case FieldType.Checkbox:
+        onChangeCheckbox(item, form);
+        break;
+      case FieldType.Radio:
+        onChangeRadio(item, form);
+        break;
+      case FieldType.Picker:
+        handlePicker(item, form);
+        break;
 
-    if (item.type === FieldType.Radio) {
-      onChangeRadio(item, form);
-    }
-
-    if (item.type === FieldType.Picker) {
-      handlePicker(item, form);
+      default:
+        onChangeOther(item, form);
+        break;
     }
   });
 
@@ -81,7 +90,7 @@ export default async ({
         fieldDOM.innerText = defaultText;
       }
     });
-    onReset()
+    onReset();
   };
 };
 
@@ -100,10 +109,18 @@ export const render = (config: Filed) => {
   }
 };
 
-export const renderInput = ({ name, field, value, type, placeholder }: Filed) => {
+export const renderInput = ({
+  name,
+  field,
+  value,
+  type,
+  placeholder,
+}: Filed) => {
   return html`
     <li class="form_item ${s.formitem}">
-      <label class="form_item_label ${s.formitemlabel}" for="${field}">${name}</label>
+      <label class="form_item_label ${s.formitemlabel}" for="${field}"
+        >${name}</label
+      >
       <div class="form_item_content ${s.formitemcontent}">
         <input
           class="form_item_text"
@@ -118,16 +135,27 @@ export const renderInput = ({ name, field, value, type, placeholder }: Filed) =>
   `;
 };
 
-export const renderSelect = ({ name, field, value, options, placeholder }: Filed) => {
+export const renderSelect = ({
+  name,
+  field,
+  value,
+  options,
+  placeholder,
+}: Filed) => {
   return html`
     <li class="form_item ${s.formitem}">
-      <label class="form_item_label ${s.formitemlabel}" for="${field}">${name}</label>
+      <label class="form_item_label ${s.formitemlabel}" for="${field}"
+        >${name}</label
+      >
       <div class="form_item_content ${s.formitemcontent}">
         <select class="form_item_select" id="${field}" name="${field}">
-          <option>${placeholder || '请选择'}</option>
+          <option>${placeholder || "请选择"}</option>
           ${options.map(
             (item: Option, index: number) => html`
-              <option value="${item.value}" ${item.value === value && "selected"}>
+              <option
+                value="${item.value}"
+                ${item.value === value && "selected"}
+              >
                 ${item.label}
               </option>
             `
@@ -207,7 +235,9 @@ export const renderPicker = ({
 }: Filed) => {
   return html`
     <li class="form_item ${s.formitem}">
-      <label class="form_item_label ${s.formitemlabel}" for="${field}">${name}</label>
+      <label class="form_item_label ${s.formitemlabel}" for="${field}"
+        >${name}</label
+      >
       <button
         class="form_item_button"
         id="${field}"
@@ -254,6 +284,15 @@ const onChangeRadio = (item: Filed, form: HTMLFormElement) => {
   });
 };
 
+export const onChangeOther = (item: Filed, form: HTMLFormElement) => {
+  const target: HTMLInputElement = form.querySelector(`#${item.field}`);
+  target.onchange = function (e) {
+    const val =  (e.target as HTMLInputElement).value;
+    console.log(val)
+  }
+}
+
+
 const handlePicker = (item: Filed, form: HTMLFormElement) => {
   const target: HTMLInputElement = form.querySelector(`#${item.field}`);
   const wheels: any = item.options;
@@ -275,12 +314,14 @@ const handlePicker = (item: Filed, form: HTMLFormElement) => {
       if (!item.keyMap?.value) {
         target.value = data.join(",");
         target.innerText = data.join(item.splitSymbol);
-        target.setAttribute('data-display', target.innerText)
+        target.setAttribute("data-display", target.innerText);
         return;
       }
       target.value = data.map((el) => el[item.keyMap.value]).join(",");
-      target.innerText = data.map((el) => el[item.keyMap.display]).join(item.splitSymbol);
-      target.setAttribute('data-display', target.innerText)
+      target.innerText = data
+        .map((el) => el[item.keyMap.display])
+        .join(item.splitSymbol);
+      target.setAttribute("data-display", target.innerText);
     },
   };
   const datePicker = new Picker(parames);
