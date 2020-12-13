@@ -9,11 +9,13 @@ export default async ({
   parentId,
   fields,
   onSubmit,
+  onReset
 }: {
   id: string;
   parentId?: string;
   fields: Filed[];
   onSubmit: (data: { [keys: string]: any }) => void;
+  onReset: () => void;
 }) => {
   const rootDom = document.getElementById(parentId) || document.body;
   // 检查数据
@@ -79,6 +81,7 @@ export default async ({
         fieldDOM.innerText = defaultText;
       }
     });
+    onReset()
   };
 };
 

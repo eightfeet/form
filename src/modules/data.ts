@@ -8,7 +8,16 @@ export const fields: Filed[] = [
     field: "name1",
     value: "name value1",
     type: "tel",
-    placeholder: "请输入姓名"
+    placeholder: "请输入姓名",
+    validate: {
+      VPhone: {
+        strict: true
+      },
+      VRequire: {
+        length: 3
+      },
+      VDangerousChar: {}
+    }
   },
   {
     name: "姓名6",
@@ -16,7 +25,7 @@ export const fields: Filed[] = [
     value: "1,5,25",
     type: "picker",
     splitSymbol: ":",
-    placeholder: "1:5:25",
+    placeholder: "1日:5时:25分",
     cancelBtnText: "取消",
     confirmBtnText: "确定",
     title: "json类型",

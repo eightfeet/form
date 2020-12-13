@@ -16,6 +16,9 @@ class Form {
       onSubmit: (data) => {
         console.log("data", data);
       },
+      onReset: () => {
+        console.log('reset')
+      }
     });
   };
 
