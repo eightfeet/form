@@ -6,7 +6,6 @@ export const fields: Filed[] = [
   {
     name: "姓名1",
     field: "name1",
-    value: "name value1",
     type: "tel",
     placeholder: "请输入姓名",
     validate: {
@@ -21,8 +20,12 @@ export const fields: Filed[] = [
   },
   {
     name: "姓名6",
+    validate: {
+      VRequire:{
+        Msg: '姓名6'
+      }
+    },
     field: "name6",
-    value: "1,5,25",
     type: "picker",
     splitSymbol: ":",
     placeholder: "1日:5时:25分",
@@ -47,6 +50,12 @@ export const fields: Filed[] = [
     name: "姓名5",
     field: "name5",
     value: "1,2",
+    validate: {
+      VRequire: {
+        length: 1,
+        Msg: '选择一个名字'
+      }
+    },
     type: "checkbox",
     options: [
       {
@@ -92,6 +101,12 @@ export const fields: Filed[] = [
     field: "name3",
     value: "",
     placeholder: "请选择地址",
+    validate: {
+      VRequire: {
+        length: 1,
+        Msg: '选择一个名字'
+      }
+    },
     type: "select",
     options: [
       {
@@ -111,8 +126,14 @@ export const fields: Filed[] = [
   {
     name: "姓名4",
     field: "name4",
-    value: "2",
+    value: "",
     type: "radio",
+    validate: {
+      VRequire: {
+        length: 1,
+        Msg: '选择姓名4'
+      }
+    },
     options: [
       {
         label: "a",

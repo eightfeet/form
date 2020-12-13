@@ -1,6 +1,6 @@
 import s from "./form.scss";
 import { html } from "common-tags";
-import { checkType } from "./../helper";
+import { checkType, handleValidate, removeErrorDom } from "./../helper";
 import { Filed, FieldType, Option } from "~/types/data";
 import Picker, { Option as pickerOption } from "@eightfeet/picker";
 
@@ -17,7 +17,6 @@ export default async ({
   onSubmit: (data: { [keys: string]: any }) => void;
   onReset: () => void;
 }) => {
-  let validated: boolean = false;
   const rootDom = document.getElementById(parentId) || document.body;
   // 检查数据
   checkType(fields, "Array", "fields");
@@ -65,30 +64,38 @@ export default async ({
 
   form.onsubmit = (e) => {
     e.preventDefault();
+    let validated: boolean[] = [];
     const formData = new FormData(form);
     const result = {};
-    fields.forEach(({ field, type }) => {
+    fields.forEach(element => {
+      const { field, type } = element;
+      const valdom = document.getElementById(
+        field
+      ) as HTMLInputElement;
       if (type === FieldType.Picker) {
-        result[field] = (document.getElementById(
-          field
-        ) as HTMLInputElement).value;
+        result[field] = valdom.value;
       } else {
         const data = formData.get(field);
         result[field] = data;
       }
+      validated.push(handleValidate(valdom.value, element, (valdom.parentNode as HTMLDivElement)));
     });
+    if (validated.includes(false)) {
+      return;
+    }
     onSubmit(result);
   };
 
   form.onreset = (e) => {
     fields.forEach(({ field, type }) => {
+      const fieldDOM = document.getElementById(field) as HTMLButtonElement;
       if (type === FieldType.Picker) {
-        const fieldDOM = document.getElementById(field) as HTMLButtonElement;
         const defaultVal = fieldDOM.getAttribute("data-default-value");
         const defaultText = fieldDOM.getAttribute("data-default-display");
         fieldDOM.value = defaultVal;
         fieldDOM.innerText = defaultText;
       }
+      removeErrorDom(fieldDOM.parentNode as HTMLDivElement)
     });
     onReset();
   };
@@ -149,7 +156,7 @@ export const renderSelect = ({
       >
       <div class="form_item_content ${s.formitemcontent}">
         <select class="form_item_select" id="${field}" name="${field}">
-          <option>${placeholder || "请选择"}</option>
+          <option value="">${placeholder || "请选择"}</option>
           ${options.map(
             (item: Option, index: number) => html`
               <option
@@ -238,21 +245,24 @@ export const renderPicker = ({
       <label class="form_item_label ${s.formitemlabel}" for="${field}"
         >${name}</label
       >
-      <button
-        class="form_item_button"
-        id="${field}"
-        data-default-value="${value}"
-        data-default-display="${placeholder || value}"
-        value="${value}"
-        data-display="${placeholder || value}"
-      >
-        ${placeholder || value}
-      </button>
+      <div class="form_item_content ${s.formitemcontent}">
+        <button
+          class="form_item_button"
+          id="${field}"
+          data-default-value="${value}"
+          data-default-display="${placeholder || value}"
+          value="${value}"
+          data-display="${placeholder || value}"
+        >
+          ${placeholder || value}
+        </button>
+      </div>
     </li>
   `;
 };
 
 const onChangeCheckbox = (item: Filed, form: HTMLFormElement) => {
+  const valdom: HTMLInputElement = form.querySelector(`#${item.field}`);
   item.options.forEach((el, i) => {
     const checkbox: HTMLInputElement = form.querySelector(`#${item.field}${i}`);
     checkbox.onchange = function () {
@@ -267,19 +277,24 @@ const onChangeCheckbox = (item: Filed, form: HTMLFormElement) => {
         tempData = tempData.filter((item) => item !== el.value);
       }
       fieldDom.value = tempData.join(",");
+      const val = valdom.value;
+      handleValidate(val, item, (valdom.parentNode as HTMLDivElement));
     };
   });
+  
 };
 
 const onChangeRadio = (item: Filed, form: HTMLFormElement) => {
+  const valdom: HTMLInputElement = form.querySelector(`#${item.field}`);
   item.options.forEach((el: Option, i: number) => {
     const radio: HTMLInputElement = form.querySelector(`#${item.field}${i}`);
     radio.onchange = function () {
       if (radio.checked === true) {
         const fieldDom: HTMLInputElement = form.querySelector(`#${item.field}`);
         fieldDom.value = el.value;
-        return;
       }
+      const val = valdom.value;
+      handleValidate(val, item, (valdom.parentNode as HTMLDivElement));
     };
   });
 };
@@ -288,7 +303,7 @@ export const onChangeOther = (item: Filed, form: HTMLFormElement) => {
   const target: HTMLInputElement = form.querySelector(`#${item.field}`);
   target.onchange = function (e) {
     const val =  (e.target as HTMLInputElement).value;
-    console.log(val)
+    handleValidate(val, item, (target.parentNode as HTMLDivElement));
   }
 }
 
@@ -315,6 +330,7 @@ const handlePicker = (item: Filed, form: HTMLFormElement) => {
         target.value = data.join(",");
         target.innerText = data.join(item.splitSymbol);
         target.setAttribute("data-display", target.innerText);
+        handleValidate(target.value, item, (target.parentNode as HTMLDivElement));
         return;
       }
       target.value = data.map((el) => el[item.keyMap.value]).join(",");
@@ -322,6 +338,7 @@ const handlePicker = (item: Filed, form: HTMLFormElement) => {
         .map((el) => el[item.keyMap.display])
         .join(item.splitSymbol);
       target.setAttribute("data-display", target.innerText);
+      handleValidate(target.value, item, (target.parentNode as HTMLDivElement));
     },
   };
   const datePicker = new Picker(parames);
