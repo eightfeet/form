@@ -8,14 +8,15 @@ export const fields: Filed[] = [
     field: "name1",
     value: "name value1",
     type: "tel",
+    placeholder: "请输入姓名"
   },
   {
     name: "姓名6",
     field: "name6",
-    value: "1,22,50",
+    value: "1,5,25",
     type: "picker",
     splitSymbol: ":",
-    defaultDisplay: "1日:22时:10分",
+    placeholder: "1:5:25",
     cancelBtnText: "取消",
     confirmBtnText: "确定",
     title: "json类型",
@@ -58,11 +59,11 @@ export const fields: Filed[] = [
     field: "name7",
     value: "3",
     type: "picker",
+    placeholder: "周三",
     keyMap: { display: "date", value: "val" },
     cancelBtnText: "取消",
     confirmBtnText: "确定",
     title: "时间",
-    defaultDisplay: "周三",
     options: [
       {
         data: [
@@ -80,7 +81,8 @@ export const fields: Filed[] = [
   {
     name: "姓名3",
     field: "name3",
-    value: "2",
+    value: "",
+    placeholder: "请选择地址",
     type: "select",
     options: [
       {

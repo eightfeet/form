@@ -21,12 +21,12 @@ export default async ({
 
   // 创建内容
   const htmlString = html`
-    <ul class="form_worp">
+    <ul class="${s.wrap} form_worp">
       ${fields.map((item) => render(item))}
-      <li class="form_item">
-        <ul class="form_button">
-          <li class="form_submit"><input type="submit" value="Submit!" /></li>
-          <li class="form_reset"><input type="reset" value="Reset!" /></li>
+      <li class="form_item ${s.formitem}">
+        <ul class="form_button_wrap ${s.formbuttonwrap}">
+          <li class="form_submit form_button ${s.formbutton} ${s.formsubmit}"><input type="submit" value="Submit!" /></li>
+          <li class="form_reset form_button ${s.formbutton} ${s.formreset}"><input type="reset" value="Reset!" /></li>
         </ul>
       </li>
     </ul>
@@ -97,44 +97,49 @@ export const render = (config: Filed) => {
   }
 };
 
-export const renderInput = ({ name, field, value, type }: Filed) => {
+export const renderInput = ({ name, field, value, type, placeholder }: Filed) => {
   return html`
-    <li class="form_item">
-      <label class="form_item_label" for="${field}">${name}:</label>
-      <input
-        class="form_item_text"
-        type="${type}"
-        id="${field}"
-        name="${field}"
-        value="${value}"
-      />
+    <li class="form_item ${s.formitem}">
+      <label class="form_item_label ${s.formitemlabel}" for="${field}">${name}</label>
+      <div class="form_item_content ${s.formitemcontent}">
+        <input
+          class="form_item_text"
+          type="${type}"
+          id="${field}"
+          name="${field}"
+          value="${value}"
+          placeholder="${placeholder}"
+        />
+      </div>
     </li>
   `;
 };
 
-export const renderSelect = ({ name, field, value, options }: Filed) => {
+export const renderSelect = ({ name, field, value, options, placeholder }: Filed) => {
   return html`
-    <li class="form_item">
-      <label class="form_item_label" for="${field}">${name}:</label>
-      <select class="form_item_select" id="${field}" name="${field}">
-        <option>请选择</option>
-        ${options.map(
-          (item: Option, index: number) => html`
-            <option value="${item.value}" ${item.value === value && "selected"}>
-              ${item.label}
-            </option>
-          `
-        )}
-      </select>
+    <li class="form_item ${s.formitem}">
+      <label class="form_item_label ${s.formitemlabel}" for="${field}">${name}</label>
+      <div class="form_item_content ${s.formitemcontent}">
+        <select class="form_item_select" id="${field}" name="${field}">
+          <option>${placeholder || '请选择'}</option>
+          ${options.map(
+            (item: Option, index: number) => html`
+              <option value="${item.value}" ${item.value === value && "selected"}>
+                ${item.label}
+              </option>
+            `
+          )}
+        </select>
+      </div>
     </li>
   `;
 };
 
 export const renderRadio = ({ name, options, field, value }: Filed) => {
   return html`
-    <li class="form_item">
-      <label class="form_item_label">${name}:</label>
-      <div>
+    <li class="form_item ${s.formitem}">
+      <label class="form_item_label ${s.formitemlabel}">${name}</label>
+      <div class="form_item_content ${s.formitemcontent}">
         <input
           style="display:none"
           id="${field}"
@@ -151,7 +156,7 @@ export const renderRadio = ({ name, options, field, value }: Filed) => {
                 id="${field}${index}"
                 ${item.value === value && "checked"}
               />
-              <span>${item.label}</span>
+              <span class="form_item_sub_checkbox_disc">${item.label}</span>
             </label>
           `
         )}
@@ -162,9 +167,9 @@ export const renderRadio = ({ name, options, field, value }: Filed) => {
 
 export const renderCheckbox = ({ name, field, value, options }: Filed) => {
   return html`
-    <li class="form_item">
-      <label class="form_item_label">${name}:</label>
-      <div>
+    <li class="form_item ${s.formitem}">
+      <label class="form_item_label ${s.formitemlabel}">${name}</label>
+      <div class="form_item_content ${s.formitemcontent}">
         <input
           style="display:none"
           id="${field}"
@@ -181,7 +186,7 @@ export const renderCheckbox = ({ name, field, value, options }: Filed) => {
                 id="${field}${index}"
                 ${value.split(",").includes(item.value) && "checked"}
               />
-              <span>${item.label}</span>
+              <span class="form_item_sub_checkbox_disc">${item.label}</span>
             </label>
           `
         )}
@@ -194,21 +199,21 @@ export const renderPicker = ({
   name,
   field,
   value,
-  defaultDisplay,
+  placeholder,
   type,
 }: Filed) => {
   return html`
-    <li class="form_item">
-      <label class="form_item_label" for="${field}">${name}:</label>
+    <li class="form_item ${s.formitem}">
+      <label class="form_item_label ${s.formitemlabel}" for="${field}">${name}</label>
       <button
         class="form_item_button"
         id="${field}"
         data-default-value="${value}"
-        data-default-display="${defaultDisplay || value}"
+        data-default-display="${placeholder || value}"
         value="${value}"
-        data-display="${defaultDisplay || value}"
+        data-display="${placeholder || value}"
       >
-        ${defaultDisplay || value}
+        ${placeholder || value}
       </button>
     </li>
   `;

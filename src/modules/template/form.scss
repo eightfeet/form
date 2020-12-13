@@ -166,4 +166,37 @@
   :focus {
     outline: none;
   }
+
+
+  .wrap {
+    list-style: none;
+    padding: 0;
+  }
+
+  .formitem {
+    display: flex;
+    margin-bottom: 1em;
+    padding: 0;
+  }
+
+  .formitemlabel {
+    color: #aaa;
+    display: inline-block;
+    min-width: 20%;
+    text-align: right;
+    margin-right: 2%;
+  }
+
+  .formbuttonwrap {
+    list-style: none;
+    display: flex;
+    padding: 0;
+    width: 80%;
+  }
+
+  .formbutton {
+    flex: auto;
+    text-align: center;
+  }
+  
 }
