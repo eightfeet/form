@@ -21,10 +21,6 @@ class Form {
       }
     });
   };
-
-  submit = () => {};
-
-  reset = () => {};
 }
 
 new Form({});

@@ -7,12 +7,14 @@ import Picker, { Option as pickerOption } from "@eightfeet/picker";
 export default async ({
   id,
   parentId,
+  title,
   fields,
   onSubmit,
   onReset,
 }: {
   id: string;
   parentId?: string;
+  title?: string;
   fields: Filed[];
   onSubmit: (data: { [keys: string]: any }) => void;
   onReset: () => void;
@@ -23,17 +25,16 @@ export default async ({
 
   // 创建内容
   const htmlString = html`
+    ${title ? html`<h3 class="${s.title} form_title"></h3>` : ''}
     <ul class="${s.wrap} form_worp">
       ${fields.map((item) => render(item))}
-      <li class="form_item ${s.formitem}">
-        <ul class="form_button_wrap ${s.formbuttonwrap}">
-          <li class="form_submit form_button ${s.formbutton} ${s.formsubmit}">
-            <input type="submit" value="Submit!" />
-          </li>
-          <li class="form_reset form_button ${s.formbutton} ${s.formreset}">
-            <input type="reset" value="Reset!" />
-          </li>
-        </ul>
+    </ul>
+    <ul class="${s.formbuttonwrap} form_button_wrap">
+      <li class=" ${s.formbutton} ${s.formsubmit} form_submit form_button">
+        <input type="submit" value="Submit!" />
+      </li>
+      <li class=" ${s.formbutton} ${s.formreset} form_reset form_button">
+        <input type="reset" value="Reset!" />
       </li>
     </ul>
   `;
@@ -124,11 +125,11 @@ export const renderInput = ({
   placeholder,
 }: Filed) => {
   return html`
-    <li class="form_item ${s.formitem}">
-      <label class="form_item_label ${s.formitemlabel}" for="${field}"
+    <li class="${s.formitem} form_item">
+      <label class="${s.formitemlabel} form_item_label" for="${field}"
         >${name}</label
       >
-      <div class="form_item_content ${s.formitemcontent}">
+      <div class="${s.formitemcontent} form_item_content">
         <input
           class="form_item_text"
           type="${type}"
@@ -150,15 +151,15 @@ export const renderSelect = ({
   placeholder,
 }: Filed) => {
   return html`
-    <li class="form_item ${s.formitem}">
-      <label class="form_item_label ${s.formitemlabel}" for="${field}"
+    <li class="${s.formitem} form_item">
+      <label class="${s.formitemlabel} form_item_label" for="${field}"
         >${name}</label
       >
-      <div class="form_item_content ${s.formitemcontent}">
+      <div class="${s.formitemcontent} form_item_content">
         <select class="form_item_select" id="${field}" name="${field}">
           <option value="">${placeholder || "请选择"}</option>
           ${options.map(
-            (item: Option, index: number) => html`
+            (item: Option) => html`
               <option
                 value="${item.value}"
                 ${item.value === value && "selected"}
@@ -175,9 +176,9 @@ export const renderSelect = ({
 
 export const renderRadio = ({ name, options, field, value }: Filed) => {
   return html`
-    <li class="form_item ${s.formitem}">
-      <label class="form_item_label ${s.formitemlabel}">${name}</label>
-      <div class="form_item_content ${s.formitemcontent}">
+    <li class="${s.formitem} form_item">
+      <label class="${s.formitemlabel} form_item_label">${name}</label>
+      <div class="${s.formitemcontent} form_item_content">
         <input
           style="display:none"
           id="${field}"
@@ -205,9 +206,9 @@ export const renderRadio = ({ name, options, field, value }: Filed) => {
 
 export const renderCheckbox = ({ name, field, value, options }: Filed) => {
   return html`
-    <li class="form_item ${s.formitem}">
-      <label class="form_item_label ${s.formitemlabel}">${name}</label>
-      <div class="form_item_content ${s.formitemcontent}">
+    <li class="${s.formitem} form_item">
+      <label class="${s.formitemlabel} form_item_label">${name}</label>
+      <div class="${s.formitemcontent} form_item_content">
         <input
           style="display:none"
           id="${field}"
@@ -241,11 +242,11 @@ export const renderPicker = ({
   type,
 }: Filed) => {
   return html`
-    <li class="form_item ${s.formitem}">
-      <label class="form_item_label ${s.formitemlabel}" for="${field}"
+    <li class="${s.formitem} form_item">
+      <label class="${s.formitemlabel} form_item_label" for="${field}"
         >${name}</label
       >
-      <div class="form_item_content ${s.formitemcontent}">
+      <div class="${s.formitemcontent} form_item_content">
         <button
           class="form_item_button"
           id="${field}"
@@ -344,6 +345,7 @@ const handlePicker = (item: Filed, form: HTMLFormElement) => {
   const datePicker = new Picker(parames);
   window[item.field] = datePicker;
   target.onclick = (e) => {
+    e.preventDefault();
     target.blur();
     let dataValue: any[] = (e.target as HTMLInputElement).value.split(",");
     if (!item.keyMap?.value) {
