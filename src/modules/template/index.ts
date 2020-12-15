@@ -25,7 +25,7 @@ export default async ({
 
   // 创建内容
   const htmlString = html`
-    ${title ? html`<h3 class="${s.title} form_title"></h3>` : ''}
+    ${title ? html`<h3 class="${s.title} form_title"></h3>` : ""}
     <ul class="${s.wrap} form_worp">
       ${fields.map((item) => render(item))}
     </ul>
@@ -68,18 +68,22 @@ export default async ({
     let validated: boolean[] = [];
     const formData = new FormData(form);
     const result = {};
-    fields.forEach(element => {
+    fields.forEach((element) => {
       const { field, type } = element;
-      const valdom = document.getElementById(
-        field
-      ) as HTMLInputElement;
+      const valdom = document.getElementById(field) as HTMLInputElement;
       if (type === FieldType.Picker) {
         result[field] = valdom.value;
       } else {
         const data = formData.get(field);
         result[field] = data;
       }
-      validated.push(handleValidate(valdom.value, element, (valdom.parentNode as HTMLDivElement)));
+      validated.push(
+        handleValidate(
+          valdom.value,
+          element,
+          valdom.parentNode as HTMLDivElement
+        )
+      );
     });
     if (validated.includes(false)) {
       return;
@@ -96,7 +100,7 @@ export default async ({
         fieldDOM.value = defaultVal;
         fieldDOM.innerText = defaultText;
       }
-      removeErrorDom(fieldDOM.parentNode as HTMLDivElement)
+      removeErrorDom(fieldDOM.parentNode as HTMLDivElement);
     });
     onReset();
   };
@@ -123,6 +127,7 @@ export const renderInput = ({
   value,
   type,
   placeholder,
+  disabled,
 }: Filed) => {
   return html`
     <li class="${s.formitem} form_item">
@@ -132,6 +137,7 @@ export const renderInput = ({
       <div class="${s.formitemcontent} form_item_content">
         <input
           class="form_item_text"
+          ${disabled ? "disabled" : ""}
           type="${type}"
           id="${field}"
           name="${field}"
@@ -149,6 +155,7 @@ export const renderSelect = ({
   value,
   options,
   placeholder,
+  disabled,
 }: Filed) => {
   return html`
     <li class="${s.formitem} form_item">
@@ -156,7 +163,12 @@ export const renderSelect = ({
         >${name}</label
       >
       <div class="${s.formitemcontent} form_item_content">
-        <select class="form_item_select" id="${field}" name="${field}">
+        <select
+          ${disabled ? "disabled" : ""}
+          class="form_item_select"
+          id="${field}"
+          name="${field}"
+        >
           <option value="">${placeholder || "请选择"}</option>
           ${options.map(
             (item: Option) => html`
@@ -174,7 +186,7 @@ export const renderSelect = ({
   `;
 };
 
-export const renderRadio = ({ name, options, field, value }: Filed) => {
+export const renderRadio = ({ name, options, field, value, disabled }: Filed) => {
   return html`
     <li class="${s.formitem} form_item">
       <label class="${s.formitemlabel} form_item_label">${name}</label>
@@ -190,6 +202,7 @@ export const renderRadio = ({ name, options, field, value }: Filed) => {
             <label class="form_item_sub_label">
               <input
                 class="form_item_sub_radio"
+                ${disabled ? 'disabled' : ''}
                 type="radio"
                 name="${field}radio"
                 id="${field}${index}"
@@ -204,7 +217,7 @@ export const renderRadio = ({ name, options, field, value }: Filed) => {
   `;
 };
 
-export const renderCheckbox = ({ name, field, value, options }: Filed) => {
+export const renderCheckbox = ({ name, field, value, options, disabled }: Filed) => {
   return html`
     <li class="${s.formitem} form_item">
       <label class="${s.formitemlabel} form_item_label">${name}</label>
@@ -221,6 +234,7 @@ export const renderCheckbox = ({ name, field, value, options }: Filed) => {
               <input
                 class="form_item_sub_checkbox"
                 type="checkbox"
+                ${disabled ? 'disabled' : ''}
                 name="${field}${index}"
                 id="${field}${index}"
                 ${value.split(",").includes(item.value) && "checked"}
@@ -240,6 +254,7 @@ export const renderPicker = ({
   value,
   placeholder,
   type,
+  disabled
 }: Filed) => {
   return html`
     <li class="${s.formitem} form_item">
@@ -249,6 +264,7 @@ export const renderPicker = ({
       <div class="${s.formitemcontent} form_item_content">
         <button
           class="form_item_button"
+          ${disabled ? 'disabled' : ''}
           id="${field}"
           data-default-value="${value}"
           data-default-display="${placeholder || value}"
@@ -279,10 +295,9 @@ const onChangeCheckbox = (item: Filed, form: HTMLFormElement) => {
       }
       fieldDom.value = tempData.join(",");
       const val = valdom.value;
-      handleValidate(val, item, (valdom.parentNode as HTMLDivElement));
+      handleValidate(val, item, valdom.parentNode as HTMLDivElement);
     };
   });
-  
 };
 
 const onChangeRadio = (item: Filed, form: HTMLFormElement) => {
@@ -295,7 +310,7 @@ const onChangeRadio = (item: Filed, form: HTMLFormElement) => {
         fieldDom.value = el.value;
       }
       const val = valdom.value;
-      handleValidate(val, item, (valdom.parentNode as HTMLDivElement));
+      handleValidate(val, item, valdom.parentNode as HTMLDivElement);
     };
   });
 };
@@ -303,11 +318,10 @@ const onChangeRadio = (item: Filed, form: HTMLFormElement) => {
 export const onChangeOther = (item: Filed, form: HTMLFormElement) => {
   const target: HTMLInputElement = form.querySelector(`#${item.field}`);
   target.onchange = function (e) {
-    const val =  (e.target as HTMLInputElement).value;
-    handleValidate(val, item, (target.parentNode as HTMLDivElement));
-  }
-}
-
+    const val = (e.target as HTMLInputElement).value;
+    handleValidate(val, item, target.parentNode as HTMLDivElement);
+  };
+};
 
 const handlePicker = (item: Filed, form: HTMLFormElement) => {
   const target: HTMLInputElement = form.querySelector(`#${item.field}`);
@@ -331,7 +345,7 @@ const handlePicker = (item: Filed, form: HTMLFormElement) => {
         target.value = data.join(",");
         target.innerText = data.join(item.splitSymbol);
         target.setAttribute("data-display", target.innerText);
-        handleValidate(target.value, item, (target.parentNode as HTMLDivElement));
+        handleValidate(target.value, item, target.parentNode as HTMLDivElement);
         return;
       }
       target.value = data.map((el) => el[item.keyMap.value]).join(",");
@@ -339,7 +353,7 @@ const handlePicker = (item: Filed, form: HTMLFormElement) => {
         .map((el) => el[item.keyMap.display])
         .join(item.splitSymbol);
       target.setAttribute("data-display", target.innerText);
-      handleValidate(target.value, item, (target.parentNode as HTMLDivElement));
+      handleValidate(target.value, item, target.parentNode as HTMLDivElement);
     },
   };
   const datePicker = new Picker(parames);

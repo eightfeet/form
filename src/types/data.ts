@@ -9,6 +9,7 @@ export enum FieldType {
 export interface Filed {
     name: string;
     field: string;
+    disabled?: boolean;
     value?: string;
     defaultDisplay?: string;
     type?: "tel" | "radio" | "checkbox" | "select" | "picker";
