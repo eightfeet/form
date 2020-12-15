@@ -3,7 +3,8 @@ export enum FieldType {
     Radio = "radio",
     Checkbox = "checkbox",
     Select = "select",
-    Picker = "picker"
+    Picker = "picker",
+    Textarea = "textarea"
 }
 
 export interface Filed {
@@ -12,7 +13,8 @@ export interface Filed {
     disabled?: boolean;
     value?: string;
     defaultDisplay?: string;
-    type?: "tel" | "radio" | "checkbox" | "select" | "picker";
+    readonly?:boolean;
+    type: "tel" | "radio" | "checkbox" | "select" | "picker" | "textarea" | "text";
     options?: Option [],
     keyMap?: { 
         [keys: string]: any

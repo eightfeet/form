@@ -25,16 +25,16 @@ export default async ({
 
   // 创建内容
   const htmlString = html`
-    ${title ? html`<h3 class="${s.title} form_title"></h3>` : ""}
+    ${title ? html`<h3 class="${s.title} form_title">${title}</h3>` : ""}
     <ul class="${s.wrap} form_worp">
       ${fields.map((item) => render(item))}
     </ul>
     <ul class="${s.formbuttonwrap} form_button_wrap">
       <li class=" ${s.formbutton} ${s.formsubmit} form_submit form_button">
-        <input type="submit" value="Submit!" />
+        <button type="submit" />提交</button>
       </li>
       <li class=" ${s.formbutton} ${s.formreset} form_reset form_button">
-        <input type="reset" value="Reset!" />
+        <button type="reset" />重置</button>
       </li>
     </ul>
   `;
@@ -69,9 +69,10 @@ export default async ({
     const formData = new FormData(form);
     const result = {};
     fields.forEach((element) => {
-      const { field, type } = element;
+      const { field, type, disabled } = element;
       const valdom = document.getElementById(field) as HTMLInputElement;
-      if (type === FieldType.Picker) {
+      console.log('field', disabled)
+      if (type === FieldType.Picker && !disabled) {
         result[field] = valdom.value;
       } else {
         const data = formData.get(field);
@@ -116,6 +117,8 @@ export const render = (config: Filed) => {
       return renderSelect(config);
     case FieldType.Picker:
       return renderPicker(config);
+    case FieldType.Textarea:
+      return renderTextarea(config);
     default:
       return renderInput(config);
   }
@@ -128,6 +131,7 @@ export const renderInput = ({
   type,
   placeholder,
   disabled,
+  readonly
 }: Filed) => {
   return html`
     <li class="${s.formitem} form_item">
@@ -138,6 +142,7 @@ export const renderInput = ({
         <input
           class="form_item_text"
           ${disabled ? "disabled" : ""}
+          ${readonly ? "readonly" : ""}
           type="${type}"
           id="${field}"
           name="${field}"
@@ -149,6 +154,34 @@ export const renderInput = ({
   `;
 };
 
+export const renderTextarea = ({
+  name,
+  field,
+  value,
+  type,
+  placeholder,
+  disabled,
+  readonly
+}: Filed) => {
+  return html`
+    <li class="${s.formitem} form_item">
+      <label class="${s.formitemlabel} form_item_label" for="${field}"
+        >${name}</label
+      >
+      <div class="${s.formitemcontent} form_item_content">
+        <textarea
+          class="form_item_textarea"
+          ${disabled ? "disabled" : ""}
+          ${readonly ? "readonly" : ""}
+          type="${type}"
+          id="${field}"
+          name="${field}"
+          placeholder="${placeholder}"
+        >${value}</textarea>
+      </div>
+    </li>
+  `;
+};
 export const renderSelect = ({
   name,
   field,
@@ -156,6 +189,7 @@ export const renderSelect = ({
   options,
   placeholder,
   disabled,
+  readonly
 }: Filed) => {
   return html`
     <li class="${s.formitem} form_item">
@@ -165,6 +199,7 @@ export const renderSelect = ({
       <div class="${s.formitemcontent} form_item_content">
         <select
           ${disabled ? "disabled" : ""}
+          ${readonly ? "readonly" : ""}
           class="form_item_select"
           id="${field}"
           name="${field}"
@@ -186,13 +221,15 @@ export const renderSelect = ({
   `;
 };
 
-export const renderRadio = ({ name, options, field, value, disabled }: Filed) => {
+export const renderRadio = ({ name, options, field, value, disabled, readonly }: Filed) => {
   return html`
     <li class="${s.formitem} form_item">
       <label class="${s.formitemlabel} form_item_label">${name}</label>
       <div class="${s.formitemcontent} form_item_content">
         <input
           style="display:none"
+          ${disabled ? 'disabled' : ''}
+          ${readonly ? "readonly" : ""}
           id="${field}"
           name="${field}"
           value="${value}"
@@ -202,7 +239,8 @@ export const renderRadio = ({ name, options, field, value, disabled }: Filed) =>
             <label class="form_item_sub_label">
               <input
                 class="form_item_sub_radio"
-                ${disabled ? 'disabled' : ''}
+                ${(disabled || readonly) ? 'disabled' : ''}
+                
                 type="radio"
                 name="${field}radio"
                 id="${field}${index}"
@@ -217,13 +255,15 @@ export const renderRadio = ({ name, options, field, value, disabled }: Filed) =>
   `;
 };
 
-export const renderCheckbox = ({ name, field, value, options, disabled }: Filed) => {
+export const renderCheckbox = ({ name, field, value, options, disabled, readonly }: Filed) => {
   return html`
     <li class="${s.formitem} form_item">
       <label class="${s.formitemlabel} form_item_label">${name}</label>
       <div class="${s.formitemcontent} form_item_content">
         <input
           style="display:none"
+          ${disabled ? 'disabled' : ''}
+          ${readonly ? "readonly" : ""}
           id="${field}"
           name="${field}"
           value="${value}"
@@ -234,7 +274,7 @@ export const renderCheckbox = ({ name, field, value, options, disabled }: Filed)
               <input
                 class="form_item_sub_checkbox"
                 type="checkbox"
-                ${disabled ? 'disabled' : ''}
+                ${disabled || readonly ? 'disabled' : ''}
                 name="${field}${index}"
                 id="${field}${index}"
                 ${value.split(",").includes(item.value) && "checked"}
@@ -254,7 +294,8 @@ export const renderPicker = ({
   value,
   placeholder,
   type,
-  disabled
+  disabled,
+  readonly
 }: Filed) => {
   return html`
     <li class="${s.formitem} form_item">
@@ -263,8 +304,9 @@ export const renderPicker = ({
       >
       <div class="${s.formitemcontent} form_item_content">
         <button
+          type="button"
           class="form_item_button"
-          ${disabled ? 'disabled' : ''}
+          ${readonly || disabled ? 'disabled' : ''}
           id="${field}"
           data-default-value="${value}"
           data-default-display="${placeholder || value}"

@@ -11,6 +11,7 @@ class Form {
   initForm = (id: string, parentId?: string) => {
     createForm({
        parentId,
+       title: "表单标题",
       id,
       fields,
       onSubmit: (data) => {
