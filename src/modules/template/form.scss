@@ -3,7 +3,7 @@ $color--black: #000000;
 $color--light-grey: #E6E6E6;
 $color--grey: #CCCCCC;
 $color--dark-grey: #7B7B7B;
-$color--primary: #2AA1C0;
+$color--primary: #48aff0;
 $color--secondary: #0E647D;
 $color--red: #f00;
 
@@ -336,6 +336,10 @@ $color--red: #f00;
 
     .form_item_sub_label_radio .control__indicator {
       border-radius: 50%;
+    }
+
+    .form_item_sub_label_checkbox .control__indicator {
+      border-radius: 10%;
     }
 
     input[type="radio"], input[type="checkbox"] {

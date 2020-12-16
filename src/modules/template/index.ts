@@ -31,10 +31,10 @@ export default async ({
     </ul>
     <ul class="${s.formbuttonwrap} form_button_wrap">
       <li class=" ${s.formbutton} ${s.formsubmit} form_submit form_button">
-        <button type="submit" >提交</button>
+        <button type="submit" class="form_submit_button" >提交</button>
       </li>
       <li class=" ${s.formbutton} ${s.formreset} form_reset form_button">
-        <button type="reset" >重置</button>
+        <button type="reset" class="form_reset_button" >重置</button>
       </li>
     </ul>
   `;
@@ -218,7 +218,7 @@ export const renderSelect = ({
             `
           )}
         </select>
-        <div class="${s.select__arrow}" />
+        <div class="${s.select__arrow} form_item_select_arrow" />
       </div>
     </li>
   `;
@@ -250,7 +250,7 @@ export const renderRadio = ({ name, options, field, value, disabled, readonly }:
                 ${item.value === value && "checked"}
               />
               <span class="${s.form_item_sub_radio_disc} form_item_sub_radio_disc">${item.label}</span>
-              <div class="${s.control__indicator}" ></div>
+              <div class="${s.control__indicator} form_item_sub_radio_indicator" ></div>
             </label>
           `
         )}
@@ -284,7 +284,7 @@ export const renderCheckbox = ({ name, field, value, options, disabled, readonly
                 ${value.split(",").includes(item.value) && "checked"}
               />
               <span class="${s.form_item_sub_radio_disc} form_item_sub_checkbox_disc">${item.label}</span>
-              <div class="${s.control__indicator}" ></div>
+              <div class="${s.control__indicator} form_item_sub_checkbox_indicator" ></div>
             </label>
           `
         )}
@@ -310,7 +310,7 @@ export const renderPicker = ({
       <div class="${s.formitemcontent} form_item_content">
         <button
           type="button"
-          class="form_item_button ${s.pickerbutton}"
+          class="${s.pickerbutton} form_item_button form_item_button_pickerbutton"
           ${readonly || disabled ? 'disabled' : ''}
           id="${field}"
           data-default-value="${value}"

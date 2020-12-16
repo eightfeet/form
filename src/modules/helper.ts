@@ -75,7 +75,8 @@ export const handleValidate = (
   if (error) {
     const div = document.createElement('div');
     div.innerText = error;
-    div.classList.add(s.formvalidateerror);
+		div.classList.add(s.formvalidateerror);
+		div.classList.add('form_error_info');
     dom.appendChild(div);
     return false;
   }
