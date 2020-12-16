@@ -8,8 +8,8 @@ export const fields: Filed[] = [
     field: "name1",
     value: "13622809420",
     type: "tel",
+    maxlength: "11",
     placeholder: "请输入姓名",
-    readonly: true,
     validate: {
       VPhone: {
         strict: true
@@ -37,7 +37,6 @@ export const fields: Filed[] = [
     },
     value: "123",
     field: "name6",
-    readonly: true,
     type: "picker",
     splitSymbol: ":",
     placeholder: "1日:5时:25分",
@@ -62,7 +61,6 @@ export const fields: Filed[] = [
   {
     name: "姓名5",
     field: "name5",
-    readonly: true,
     value: "1,2",
     validate: {
       VRequire: {
@@ -89,7 +87,6 @@ export const fields: Filed[] = [
   {
     name: "姓名7",
     field: "name7",
-    readonly: true,
     value: "3",
     type: "picker",
     placeholder: "周三",
@@ -115,6 +112,7 @@ export const fields: Filed[] = [
     name: "姓名3",
     field: "name3",
     value: "1",
+    // disabled: true,
     placeholder: "请选择地址",
     validate: {
       VRequire: {
@@ -141,7 +139,6 @@ export const fields: Filed[] = [
   {
     name: "姓名4",
     field: "name4",
-    readonly: true,
     value: "1",
     type: "radio",
     validate: {

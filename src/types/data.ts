@@ -24,6 +24,7 @@ export interface Filed {
     title?: string;
     splitSymbol?: string;
     placeholder?: string;
+    maxlength?: string;
     validate?: {
         /** 验证电话号码 */
         VPhone?:valdateItem & {

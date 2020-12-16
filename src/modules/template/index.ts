@@ -31,10 +31,10 @@ export default async ({
     </ul>
     <ul class="${s.formbuttonwrap} form_button_wrap">
       <li class=" ${s.formbutton} ${s.formsubmit} form_submit form_button">
-        <button type="submit" />提交</button>
+        <button type="submit" >提交</button>
       </li>
       <li class=" ${s.formbutton} ${s.formreset} form_reset form_button">
-        <button type="reset" />重置</button>
+        <button type="reset" >重置</button>
       </li>
     </ul>
   `;
@@ -131,7 +131,8 @@ export const renderInput = ({
   type,
   placeholder,
   disabled,
-  readonly
+  readonly,
+  maxlength
 }: Filed) => {
   return html`
     <li class="${s.formitem} form_item">
@@ -143,6 +144,7 @@ export const renderInput = ({
           class="form_item_text"
           ${disabled ? "disabled" : ""}
           ${readonly ? "readonly" : ""}
+          ${maxlength ? `maxlength="${maxlength}"` : ''}
           type="${type}"
           id="${field}"
           name="${field}"
@@ -216,6 +218,7 @@ export const renderSelect = ({
             `
           )}
         </select>
+        <div class="${s.select__arrow}" />
       </div>
     </li>
   `;
@@ -236,7 +239,7 @@ export const renderRadio = ({ name, options, field, value, disabled, readonly }:
         />
         ${options.map(
           (item: Option, index: number) => html`
-            <label class="form_item_sub_label">
+            <label class="${s.form_item_sub_label} ${s.form_item_sub_label_radio} form_item_sub_label form_item_sub_label_radio">
               <input
                 class="form_item_sub_radio"
                 ${(disabled || readonly) ? 'disabled' : ''}
@@ -246,7 +249,8 @@ export const renderRadio = ({ name, options, field, value, disabled, readonly }:
                 id="${field}${index}"
                 ${item.value === value && "checked"}
               />
-              <span class="form_item_sub_checkbox_disc">${item.label}</span>
+              <span class="${s.form_item_sub_radio_disc} form_item_sub_radio_disc">${item.label}</span>
+              <div class="${s.control__indicator}" ></div>
             </label>
           `
         )}
@@ -270,7 +274,7 @@ export const renderCheckbox = ({ name, field, value, options, disabled, readonly
         />
         ${options.map(
           (item: Option, index: number) => html`
-            <label class="form_item_sub_label">
+            <label class="${s.form_item_sub_label} ${s.form_item_sub_label_checkbox} form_item_sub_label form_item_sub_label_checkbox">
               <input
                 class="form_item_sub_checkbox"
                 type="checkbox"
@@ -279,7 +283,8 @@ export const renderCheckbox = ({ name, field, value, options, disabled, readonly
                 id="${field}${index}"
                 ${value.split(",").includes(item.value) && "checked"}
               />
-              <span class="form_item_sub_checkbox_disc">${item.label}</span>
+              <span class="${s.form_item_sub_radio_disc} form_item_sub_checkbox_disc">${item.label}</span>
+              <div class="${s.control__indicator}" ></div>
             </label>
           `
         )}
@@ -305,7 +310,7 @@ export const renderPicker = ({
       <div class="${s.formitemcontent} form_item_content">
         <button
           type="button"
-          class="form_item_button"
+          class="form_item_button ${s.pickerbutton}"
           ${readonly || disabled ? 'disabled' : ''}
           id="${field}"
           data-default-value="${value}"
