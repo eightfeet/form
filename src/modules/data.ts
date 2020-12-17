@@ -26,7 +26,11 @@ export const fields: Filed[] = [
 		value: "13622809420",
 		type: "textarea",
 		placeholder: "请输入姓名",
-		disabled: true
+		validate:{
+			VDangerousChar: {
+				Msg: '非规范字符'
+			}
+		}
 	},
 	{
 		name: "姓名6",

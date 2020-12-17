@@ -1,14 +1,25 @@
 import s from "./form.scss";
 import { html } from "common-tags";
 import { checkType, handleValidate, removeErrorDom } from "./../helper";
-import { Filed, FieldType, Option } from "~/types/data";
+import { Filed, FieldType, Option, Style } from "~/types/data";
 import Picker, { Option as pickerOption } from "@eightfeet/picker";
+import { createInlineStyles } from "@eightfeet/modal";
+
+// 处理行内样式
+const createStyle = (style: any) => {
+  const inlineStyle = createInlineStyles(style);
+  if (!inlineStyle) {
+    return "";
+  }
+  return `style="${inlineStyle}"`;
+};
 
 export default async ({
   id,
   parentId,
   title,
   fields,
+  style,
   onSubmit,
   onReset,
 }: {
@@ -16,6 +27,7 @@ export default async ({
   parentId?: string;
   title?: string;
   fields: Filed[];
+  style?: Style;
   onSubmit: (data: { [keys: string]: any }) => void;
   onReset: () => void;
 }) => {
@@ -23,18 +35,48 @@ export default async ({
   // 检查数据
   checkType(fields, "Array", "fields");
 
+  const titleStyle = createInlineStyles(style?.title);
+  const formWorpStyle = createInlineStyles(style?.formWorp);
+  const formButtonWrapStyle = createInlineStyles(style?.formButtonWrap);
+  console.log("titleStyle", titleStyle);
+
   // 创建内容
   const htmlString = html`
-    ${title ? html`<h3 class="${s.title} form_title">${title}</h3>` : ""}
-    <ul class="${s.wrap} form_worp">
-      ${fields.map((item) => render(item))}
+    ${title
+      ? html` <h3 class="${s.title} form_title" ${createStyle(style?.title)}>
+          ${title}
+        </h3>`
+      : ""}
+    <ul class="${s.wrap} form_worp" ${createStyle(style?.formWorp)}>
+      ${fields.map((item) => render(item, style))}
     </ul>
-    <ul class="${s.formbuttonwrap} form_button_wrap">
-      <li class=" ${s.formbutton} ${s.formsubmit} form_submit form_button">
-        <button type="submit" class="form_submit_button" >提交</button>
+    <ul
+      class="${s.formbuttonwrap} form_button_wrap"
+      ${createStyle(style?.formButtonWrap)}
+    >
+      <li
+        class=" ${s.formbutton} ${s.formsubmit} form_submit form_button"
+        ${createStyle(style?.formSubmitWrap)}
+      >
+        <button
+          type="submit"
+          class="form_submit_button"
+          ${createStyle(style?.formSubmit)}
+        >
+          提交
+        </button>
       </li>
-      <li class=" ${s.formbutton} ${s.formreset} form_reset form_button">
-        <button type="reset" class="form_reset_button" >重置</button>
+      <li
+        class=" ${s.formbutton} ${s.formreset} form_reset form_button"
+        ${createStyle(style?.formResetWrap)}
+      >
+        <button
+          type="reset"
+          class="form_reset_button"
+          ${createStyle(style?.formReset)}
+        >
+          重置
+        </button>
       </li>
     </ul>
   `;
@@ -56,7 +98,6 @@ export default async ({
       case FieldType.Picker:
         handlePicker(item, form);
         break;
-
       default:
         onChangeOther(item, form);
         break;
@@ -71,7 +112,6 @@ export default async ({
     fields.forEach((element) => {
       const { field, type, disabled } = element;
       const valdom = document.getElementById(field) as HTMLInputElement;
-      console.log('field', disabled)
       if (type === FieldType.Picker && !disabled) {
         result[field] = valdom.value;
       } else {
@@ -107,14 +147,38 @@ export default async ({
   };
 };
 
-export const render = (config: Filed) => {
+export const render = (config: Filed, style: Style) => {
+  const formItem = createStyle(style.formItem);
+  const formItemLabel = createStyle(style.formItemLabel);
+  const formItemContent = createStyle(style.formItemContent);
+  const formItemSelect = createStyle(style.formItemSelect);
+  const formItemSelectArrow = createStyle(style.formItemSelectArrow);
+  const formItemSubLabelRadio = createStyle(style.formItemSubLabelRadio);
+  const formItemSubRadioDisc = createStyle(style.formItemSubRadioDisc);
+  const formItemSubRadioIndicator = createStyle(style.formItemSubRadioIndicator);
+
   switch (config.type) {
     case FieldType.Radio:
-      return renderRadio(config);
+      return renderRadio(
+        config,
+        formItem,
+        formItemLabel,
+        formItemContent,
+        formItemSubLabelRadio,
+        formItemSubRadioDisc,
+        formItemSubRadioIndicator
+      );
     case FieldType.Checkbox:
       return renderCheckbox(config);
     case FieldType.Select:
-      return renderSelect(config);
+      return renderSelect(
+        config,
+        formItem,
+        formItemLabel,
+        formItemContent,
+        formItemSelect,
+        formItemSelectArrow
+      );
     case FieldType.Picker:
       return renderPicker(config);
     case FieldType.Textarea:
@@ -132,7 +196,7 @@ export const renderInput = ({
   placeholder,
   disabled,
   readonly,
-  maxlength
+  maxlength,
 }: Filed) => {
   return html`
     <li class="${s.formitem} form_item">
@@ -144,7 +208,7 @@ export const renderInput = ({
           class="form_item_text"
           ${disabled ? "disabled" : ""}
           ${readonly ? "readonly" : ""}
-          ${maxlength ? `maxlength="${maxlength}"` : ''}
+          ${maxlength ? `maxlength="${maxlength}"` : ""}
           type="${type}"
           id="${field}"
           name="${field}"
@@ -163,7 +227,7 @@ export const renderTextarea = ({
   type,
   placeholder,
   disabled,
-  readonly
+  readonly,
 }: Filed) => {
   return html`
     <li class="${s.formitem} form_item">
@@ -179,32 +243,40 @@ export const renderTextarea = ({
           id="${field}"
           name="${field}"
           placeholder="${placeholder}"
-        >${value}</textarea>
+        >
+${value}</textarea
+        >
       </div>
     </li>
   `;
 };
-export const renderSelect = ({
-  name,
-  field,
-  value,
-  options,
-  placeholder,
-  disabled,
-  readonly
-}: Filed) => {
+export const renderSelect = (
+  { name, field, value, options, placeholder, disabled, readonly }: Filed,
+  formItemStyle: string,
+  formItemLabelStyle: string,
+  formItemContentStyle: string,
+  formItemSelectStyle: string,
+  formItemSelectArrowStyle: string
+) => {
   return html`
-    <li class="${s.formitem} form_item">
-      <label class="${s.formitemlabel} form_item_label" for="${field}"
+    <li class="${s.formitem} form_item" ${formItemStyle}>
+      <label
+        class="${s.formitemlabel} form_item_label"
+        for="${field}"
+        ${formItemLabelStyle}
         >${name}</label
       >
-      <div class="${s.formitemcontent} form_item_content">
+      <div
+        class="${s.formitemcontent} form_item_content"
+        ${formItemContentStyle}
+      >
         <select
           ${disabled ? "disabled" : ""}
           ${readonly ? "readonly" : ""}
           class="form_item_select"
           id="${field}"
           name="${field}"
+          ${formItemSelectStyle}
         >
           <option value="">${placeholder || "请选择"}</option>
           ${options.map(
@@ -218,20 +290,36 @@ export const renderSelect = ({
             `
           )}
         </select>
-        <div class="${s.select__arrow} form_item_select_arrow" />
+        <div
+          class="${s.select__arrow} form_item_select_arrow"
+          ${formItemSelectArrowStyle}
+        />
       </div>
     </li>
   `;
 };
 
-export const renderRadio = ({ name, options, field, value, disabled, readonly }: Filed) => {
+export const renderRadio = (
+  { name, options, field, value, disabled, readonly }: Filed,
+  formItemStyle?: string,
+  formItemLabelStyle?: string,
+  formItemContentStyle?: string,
+  formItemSubLabelRadioStyle?: string,
+  formItemSubRadioDiscStyle?: string,
+  formItemSubRadioIndicatorStyle?: string
+) => {
   return html`
-    <li class="${s.formitem} form_item">
-      <label class="${s.formitemlabel} form_item_label">${name}</label>
-      <div class="${s.formitemcontent} form_item_content">
+    <li class="${s.formitem} form_item" ${formItemStyle}>
+      <label class="${s.formitemlabel} form_item_label" ${formItemLabelStyle}
+        >${name}</label
+      >
+      <div
+        class="${s.formitemcontent} form_item_content"
+        ${formItemContentStyle}
+      >
         <input
           style="display:none"
-          ${disabled ? 'disabled' : ''}
+          ${disabled ? "disabled" : ""}
           ${readonly ? "readonly" : ""}
           id="${field}"
           name="${field}"
@@ -239,18 +327,27 @@ export const renderRadio = ({ name, options, field, value, disabled, readonly }:
         />
         ${options.map(
           (item: Option, index: number) => html`
-            <label class="${s.form_item_sub_label} ${s.form_item_sub_label_radio} form_item_sub_label form_item_sub_label_radio">
+            <label
+              class="${s.form_item_sub_label} ${s.form_item_sub_label_radio} form_item_sub_label form_item_sub_label_radio"
+              ${formItemSubLabelRadioStyle}
+            >
               <input
                 class="form_item_sub_radio"
-                ${(disabled || readonly) ? 'disabled' : ''}
-                
+                ${disabled || readonly ? "disabled" : ""}
                 type="radio"
                 name="${field}radio"
                 id="${field}${index}"
                 ${item.value === value && "checked"}
               />
-              <span class="${s.form_item_sub_radio_disc} form_item_sub_radio_disc">${item.label}</span>
-              <div class="${s.control__indicator} form_item_sub_radio_indicator" ></div>
+              <span
+                class="${s.form_item_sub_radio_disc} form_item_sub_radio_disc"
+                ${formItemSubRadioDiscStyle}
+                >${item.label}</span
+              >
+              <div
+                class="${s.control__indicator} form_item_sub_radio_indicator"
+                ${formItemSubRadioIndicatorStyle}
+              ></div>
             </label>
           `
         )}
@@ -259,14 +356,21 @@ export const renderRadio = ({ name, options, field, value, disabled, readonly }:
   `;
 };
 
-export const renderCheckbox = ({ name, field, value, options, disabled, readonly }: Filed) => {
+export const renderCheckbox = ({
+  name,
+  field,
+  value,
+  options,
+  disabled,
+  readonly,
+}: Filed) => {
   return html`
     <li class="${s.formitem} form_item">
       <label class="${s.formitemlabel} form_item_label">${name}</label>
       <div class="${s.formitemcontent} form_item_content">
         <input
           style="display:none"
-          ${disabled ? 'disabled' : ''}
+          ${disabled ? "disabled" : ""}
           ${readonly ? "readonly" : ""}
           id="${field}"
           name="${field}"
@@ -274,17 +378,24 @@ export const renderCheckbox = ({ name, field, value, options, disabled, readonly
         />
         ${options.map(
           (item: Option, index: number) => html`
-            <label class="${s.form_item_sub_label} ${s.form_item_sub_label_checkbox} form_item_sub_label form_item_sub_label_checkbox">
+            <label
+              class="${s.form_item_sub_label} ${s.form_item_sub_label_checkbox} form_item_sub_label form_item_sub_label_checkbox"
+            >
               <input
                 class="form_item_sub_checkbox"
                 type="checkbox"
-                ${disabled || readonly ? 'disabled' : ''}
+                ${disabled || readonly ? "disabled" : ""}
                 name="${field}${index}"
                 id="${field}${index}"
                 ${value.split(",").includes(item.value) && "checked"}
               />
-              <span class="${s.form_item_sub_radio_disc} form_item_sub_checkbox_disc">${item.label}</span>
-              <div class="${s.control__indicator} form_item_sub_checkbox_indicator" ></div>
+              <span
+                class="${s.form_item_sub_radio_disc} form_item_sub_checkbox_disc"
+                >${item.label}</span
+              >
+              <div
+                class="${s.control__indicator} form_item_sub_checkbox_indicator"
+              ></div>
             </label>
           `
         )}
@@ -300,7 +411,7 @@ export const renderPicker = ({
   placeholder,
   type,
   disabled,
-  readonly
+  readonly,
 }: Filed) => {
   return html`
     <li class="${s.formitem} form_item">
@@ -311,7 +422,7 @@ export const renderPicker = ({
         <button
           type="button"
           class="${s.pickerbutton} form_item_button form_item_button_pickerbutton"
-          ${readonly || disabled ? 'disabled' : ''}
+          ${readonly || disabled ? "disabled" : ""}
           id="${field}"
           data-default-value="${value}"
           data-default-display="${placeholder || value}"
