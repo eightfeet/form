@@ -35,10 +35,8 @@ export default async ({
   // 检查数据
   checkType(fields, "Array", "fields");
 
-  const titleStyle = createInlineStyles(style?.title);
-  const formWorpStyle = createInlineStyles(style?.formWorp);
-  const formButtonWrapStyle = createInlineStyles(style?.formButtonWrap);
   const pickerStyle = style?.formPicker || {};
+  const pickers = [];
 
   // 创建内容
   const htmlString = html`
@@ -96,7 +94,7 @@ export default async ({
         onChangeRadio(item, form);
         break;
       case FieldType.Picker:
-        handlePicker(item, form, pickerStyle);
+        pickers.push(handlePicker(item, form, pickerStyle));
         break;
       default:
         onChangeOther(item, form);
@@ -145,6 +143,8 @@ export default async ({
     });
     onReset();
   };
+
+  return {pickers};
 };
 
 export const render = (config: Filed, style: Style) => {
@@ -602,4 +602,6 @@ const handlePicker = (item: Filed, form: HTMLFormElement, style: any) => {
     }
     datePicker.showPicker(dataValue);
   };
+
+  return datePicker; 
 };

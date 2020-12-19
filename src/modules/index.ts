@@ -3,18 +3,23 @@ import createForm from "./template";
 import { fields } from "./data";
 
 class Form {
+	pickers: any[];
+	id: string;
+	parentId: string;
 	constructor({ id, parentId }: { id?: string; parentId?: string }) {
 		const stamp = `${new Date().getTime()}${window.Math.floor(
 			window.Math.random() * 100
 		)}`;
-		this.initForm(id || stamp, parentId);
+		this.id = id || stamp;
+		this.parentId = parentId;
+		this.initForm();
 	}
 
-  initForm = (id: string, parentId?: string) => {
+  initForm = () => {
   	createForm({
-  		parentId,
+  		parentId: this.parentId,
   		title: "表单标题",
-  		id,
+  		id: this.id,
   		fields,
   		style: {
 			  formItemSubCheckboxIndicator:{},
@@ -33,16 +38,25 @@ class Form {
   		onReset: () => {
   			console.log("reset");
   		}
-  	});
+	  }).then(({pickers}) => {
+		  this.pickers = pickers;
+	  });
+	  
   };
 	
-	destory = (id: string, parentId : string) => {
-		const formDom:HTMLElement = document.getElementById(id);
-		const formRoot:HTMLElement = document.getElementById(parentId);
+	destory = () => {
+		const formDom:HTMLElement = document.getElementById(`form${this.id}`);
+		const formRoot:HTMLElement = document.getElementById(this.parentId) || document.body;
 		formRoot.removeChild(formDom);
+		if (this.pickers?.length > 0) {
+			this.pickers.forEach(element => {
+				console.log(element);
+			});
+		}
 	}
 }
 
-new Form({});
+const aaa = new Form({});
+aaa.destory();
 
 export default Form;
