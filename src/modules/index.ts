@@ -15,12 +15,18 @@ class Form {
   		parentId,
   		title: "表单标题",
   		id,
-			fields,
-			style: {
-				formSubmit : {
-					background: 'red'
-				}
-			},
+  		fields,
+  		style: {
+			  formItemSubCheckboxIndicator:{},
+			  formPicker:{
+				  overlay: {
+					  background: "rgba(255, 0, 0, 0.4)"
+				  },
+				  title: {
+					  color: "green"
+				  }
+			  }
+  		},
   		onSubmit: (data) => {
   			console.log("data", data);
   		},

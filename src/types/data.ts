@@ -93,19 +93,85 @@ export interface Option {
 }
 
 export interface Style {
+  /**标题 */
   title?: CSS.Properties;
+  /**表单外框 */
   formWorp?: CSS.Properties;
+  /**表单按钮外框 */
   formButtonWrap?: CSS.Properties;
+  /**提交按钮 */
   formSubmit?: CSS.Properties;
+  /**重置按钮 */
   formReset?: CSS.Properties;
+  /**提交按钮包裹 */
   formSubmitWrap?: CSS.Properties;
+  /**重置按钮包裹 */
   formResetWrap?: CSS.Properties;
-  formItem?: string;
-  formItemLabel?: string;
-  formItemContent?: string;
-  formItemSelect?: string;
-  formItemSelectArrow?: string;
-  formItemSubLabelRadio?: string;
-  formItemSubRadioDisc?: string;
-  formItemSubRadioIndicator?: string;
+  /**表单项 */
+  formItem?: CSS.Properties;
+  /**表单项label */
+  formItemLabel?: CSS.Properties;
+  /**表单项内容 */
+  formItemContent?: CSS.Properties;
+  /**表单项select */
+  formItemSelect?: CSS.Properties;
+  /**表单项select 下拉箭头 */
+  formItemSelectArrow?: CSS.Properties;
+  /**表单子项radio */
+  formItemSubLabelRadio?: CSS.Properties;
+  /**表单子项radio label */
+  formItemSubRadioDisc?: CSS.Properties;
+  /**表单子项radio符号标志 */
+  formItemSubRadioIndicator?: CSS.Properties;
+  /**表单子项checkbox */
+  formItemSubLabelCheckbox?: CSS.Properties;
+  /**表单子项checkbox label */
+  formItemSubCheckboxDisc?: CSS.Properties;
+  /**表单子项checkbox符号标志 */
+  formItemSubCheckboxIndicator?: CSS.Properties;
+  /**表单按钮pickerButton */
+  formItemButtonPickerButton?: CSS.Properties;
+  /**表单项textarea */
+  formItemTextarea?: CSS.Properties;
+  /**表单项input */
+  formItemInput?: CSS.Properties;
+  /**Picker样式 */
+  formPicker?: {
+    /**
+     * 覆盖层
+     */
+    overlay?: CSS.Properties;
+    /**
+     * 外框
+     */
+    wrap?: CSS.Properties;
+    /**
+     * 标题栏
+     */
+    headlines?: CSS.Properties;
+    /**
+     * 标题
+     */
+    title?: CSS.Properties;
+    /**
+     * 取消
+     */
+    cancel?: CSS.Properties;
+    /**
+     * 确定
+     */
+    confirm?: CSS.Properties;
+    /**
+     * 轮子面板
+     */
+    panel?: CSS.Properties;
+    /**
+     * 选择线
+     */
+    selectline?: CSS.Properties;
+    /**
+     * 轮子面板覆盖层
+     */
+    mask?: CSS.Properties;
+  };
 }
