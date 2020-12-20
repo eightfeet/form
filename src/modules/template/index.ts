@@ -39,14 +39,14 @@ export default async ({
   const pickers = [];
 
   // 创建内容
-  const htmlString = html`
+  const htmlString:(formId: string) => string = (formId) => html`
     ${title
       ? html` <h3 class="${s.title} form_title" ${createStyle(style?.title)}>
           ${title}
         </h3>`
       : ""}
     <ul class="${s.wrap} form_worp" ${createStyle(style?.formWorp)}>
-      ${fields.map((item) => render(item, style))}
+      ${fields.map((item) => render(item, style, formId))}
     </ul>
     <ul
       class="${s.formbuttonwrap} form_button_wrap"
@@ -82,22 +82,22 @@ export default async ({
   const form = document.createElement("form");
   form.id = `form${id}`;
   form.classList.add(s.form);
-  form.innerHTML = htmlString;
+  form.innerHTML = htmlString(form.id);
   rootDom.appendChild(form);
   // 绑定事件
   fields.forEach((item: Filed) => {
     switch (item.type) {
       case FieldType.Checkbox:
-        onChangeCheckbox(item, form);
+        onChangeCheckbox(item, form, form.id);
         break;
       case FieldType.Radio:
-        onChangeRadio(item, form);
+        onChangeRadio(item, form, form.id );
         break;
       case FieldType.Picker:
-        pickers.push(handlePicker(item, form, pickerStyle));
+        pickers.push(handlePicker(item, form, pickerStyle, form.id));
         break;
       default:
-        onChangeOther(item, form);
+        onChangeOther(item, form, form.id);
         break;
     }
   });
@@ -109,11 +109,11 @@ export default async ({
     const result = {};
     fields.forEach((element) => {
       const { field, type, disabled } = element;
-      const valdom = document.getElementById(field) as HTMLInputElement;
+      const valdom = document.getElementById(`${form.id}${field}`) as HTMLInputElement;
       if (type === FieldType.Picker && !disabled) {
         result[field] = valdom.value;
       } else {
-        const data = formData.get(field);
+        const data = formData.get(`${form.id}${field}`);
         result[field] = data;
       }
       validated.push(
@@ -132,7 +132,7 @@ export default async ({
 
   form.onreset = (e) => {
     fields.forEach(({ field, type }) => {
-      const fieldDOM = document.getElementById(field) as HTMLButtonElement;
+      const fieldDOM = document.getElementById(`${form.id}${field}`) as HTMLButtonElement;
       if (type === FieldType.Picker) {
         const defaultVal = fieldDOM.getAttribute("data-default-value");
         const defaultText = fieldDOM.getAttribute("data-default-display");
@@ -147,7 +147,7 @@ export default async ({
   return {pickers};
 };
 
-export const render = (config: Filed, style: Style) => {
+export const render = (config: Filed, style: Style, formId: string) => {
   const formItem = createStyle(style.formItem);
   const formItemLabel = createStyle(style.formItemLabel);
   const formItemContent = createStyle(style.formItemContent);
@@ -172,6 +172,7 @@ export const render = (config: Filed, style: Style) => {
   switch (config.type) {
     case FieldType.Radio:
       return renderRadio(
+        formId,
         config,
         formItem,
         formItemLabel,
@@ -182,6 +183,7 @@ export const render = (config: Filed, style: Style) => {
       );
     case FieldType.Checkbox:
       return renderCheckbox(
+        formId,
         config,
         formItem,
         formItemLabel,
@@ -192,6 +194,7 @@ export const render = (config: Filed, style: Style) => {
       );
     case FieldType.Select:
       return renderSelect(
+        formId,
         config,
         formItem,
         formItemLabel,
@@ -201,6 +204,7 @@ export const render = (config: Filed, style: Style) => {
       );
     case FieldType.Picker:
       return renderPicker(
+        formId,
         config,
         formItem,
         formItemLabel,
@@ -209,6 +213,7 @@ export const render = (config: Filed, style: Style) => {
       );
     case FieldType.Textarea:
       return renderTextarea(
+        formId,
         config,
         formItem,
         formItemLabel,
@@ -217,6 +222,7 @@ export const render = (config: Filed, style: Style) => {
       );
     default:
       return renderInput(
+        formId,
         config,
         formItem,
         formItemLabel,
@@ -227,6 +233,7 @@ export const render = (config: Filed, style: Style) => {
 };
 
 export const renderInput = (
+  formId: string,
   {
     name,
     field,
@@ -236,6 +243,7 @@ export const renderInput = (
     disabled,
     readonly,
     maxlength,
+    accept,
   }: Filed,
   formItemStyle: string,
   formItemLabelStyle: string,
@@ -247,7 +255,7 @@ export const renderInput = (
       <label
         class="${s.formitemlabel} form_item_label"
         ${formItemLabelStyle}
-        for="${field}"
+        for="${formId}${field}"
         >${name}</label
       >
       <div
@@ -260,9 +268,10 @@ export const renderInput = (
           ${disabled ? "disabled" : ""}
           ${readonly ? "readonly" : ""}
           ${maxlength ? `maxlength="${maxlength}"` : ""}
+          ${accept ? `accept="${accept}"` : ""}
           type="${type}"
-          id="${field}"
-          name="${field}"
+          id="${formId}${field}"
+          name="${formId}${field}"
           value="${value}"
           placeholder="${placeholder}"
         />
@@ -272,6 +281,7 @@ export const renderInput = (
 };
 
 export const renderTextarea = (
+  formId: string,
   { name, field, value, type, placeholder, disabled, readonly }: Filed,
   formItemStyle: string,
   formItemLabelStyle: string,
@@ -283,7 +293,7 @@ export const renderTextarea = (
       <label
         class="${s.formitemlabel} form_item_label"
         ${formItemLabelStyle}
-        for="${field}"
+        for="${formId}${field}"
         >${name}</label
       >
       <div
@@ -296,8 +306,8 @@ export const renderTextarea = (
           ${disabled ? "disabled" : ""}
           ${readonly ? "readonly" : ""}
           type="${type}"
-          id="${field}"
-          name="${field}"
+          id="${formId}${field}"
+          name="${formId}${field}"
           placeholder="${placeholder}"
         >
 ${value}</textarea
@@ -307,6 +317,7 @@ ${value}</textarea
   `;
 };
 export const renderSelect = (
+  formId: string,
   { name, field, value, options, placeholder, disabled, readonly }: Filed,
   formItemStyle: string,
   formItemLabelStyle: string,
@@ -318,7 +329,7 @@ export const renderSelect = (
     <li class="${s.formitem} form_item" ${formItemStyle}>
       <label
         class="${s.formitemlabel} form_item_label"
-        for="${field}"
+        for="${formId}${field}"
         ${formItemLabelStyle}
         >${name}</label
       >
@@ -330,8 +341,8 @@ export const renderSelect = (
           ${disabled ? "disabled" : ""}
           ${readonly ? "readonly" : ""}
           class="form_item_select"
-          id="${field}"
-          name="${field}"
+          id="${formId}${field}"
+          name="${formId}${field}"
           ${formItemSelectStyle}
         >
           <option value="">${placeholder || "请选择"}</option>
@@ -356,6 +367,7 @@ export const renderSelect = (
 };
 
 export const renderRadio = (
+  formId: string,
   { name, options, field, value, disabled, readonly }: Filed,
   formItemStyle?: string,
   formItemLabelStyle?: string,
@@ -377,8 +389,8 @@ export const renderRadio = (
           style="display:none"
           ${disabled ? "disabled" : ""}
           ${readonly ? "readonly" : ""}
-          id="${field}"
-          name="${field}"
+          id="${formId}${field}"
+          name="${formId}${field}"
           value="${value}"
         />
         ${options.map(
@@ -391,8 +403,8 @@ export const renderRadio = (
                 class="form_item_sub_radio"
                 ${disabled || readonly ? "disabled" : ""}
                 type="radio"
-                name="${field}radio"
-                id="${field}${index}"
+                name="${formId}${field}radio"
+                id="${formId}${field}${index}"
                 ${item.value === value && "checked"}
               />
               <span
@@ -413,6 +425,7 @@ export const renderRadio = (
 };
 
 export const renderCheckbox = (
+  formId: string,
   { name, field, value, options, disabled, readonly }: Filed,
   formItemStyle?: string,
   formItemLabelStyle?: string,
@@ -434,8 +447,8 @@ export const renderCheckbox = (
           style="display:none"
           ${disabled ? "disabled" : ""}
           ${readonly ? "readonly" : ""}
-          id="${field}"
-          name="${field}"
+          id="${formId}${field}"
+          name="${formId}${field}"
           value="${value}"
         />
         ${options.map(
@@ -448,8 +461,8 @@ export const renderCheckbox = (
                 ${formItemSubLabelCheckboxStyle}
                 type="checkbox"
                 ${disabled || readonly ? "disabled" : ""}
-                name="${field}${index}"
-                id="${field}${index}"
+                name="${formId}${field}${index}"
+                id="${formId}${field}${index}"
                 ${value.split(",").includes(item.value) && "checked"}
               />
               <span
@@ -470,6 +483,7 @@ export const renderCheckbox = (
 };
 
 export const renderPicker = (
+  formId: string,
   { name, field, value, placeholder, disabled, readonly }: Filed,
   formItemStyle?: string,
   formItemLabelStyle?: string,
@@ -480,7 +494,7 @@ export const renderPicker = (
     <li class="${s.formitem} form_item" ${formItemStyle}>
       <label
         class="${s.formitemlabel} form_item_label"
-        for="${field}"
+        for="${formId}${field}"
         ${formItemLabelStyle}
         >${name}</label
       >
@@ -493,7 +507,7 @@ export const renderPicker = (
           class="${s.pickerbutton} form_item_button form_item_button_pickerbutton"
           ${formItemButtonPickerButtonStyle}
           ${readonly || disabled ? "disabled" : ""}
-          id="${field}"
+          id="${formId}${field}"
           data-default-value="${value}"
           data-default-display="${placeholder || value}"
           value="${value}"
@@ -506,12 +520,12 @@ export const renderPicker = (
   `;
 };
 
-const onChangeCheckbox = (item: Filed, form: HTMLFormElement) => {
-  const valdom: HTMLInputElement = form.querySelector(`#${item.field}`);
+const onChangeCheckbox = (item: Filed, form: HTMLFormElement, formId: string) => {
+  const valdom: HTMLInputElement = form.querySelector(`#${formId}${item.field}`);
   item.options.forEach((el, i) => {
-    const checkbox: HTMLInputElement = form.querySelector(`#${item.field}${i}`);
+    const checkbox: HTMLInputElement = form.querySelector(`#${formId}${item.field}${i}`);
     checkbox.onchange = function () {
-      const fieldDom: HTMLInputElement = form.querySelector(`#${item.field}`);
+      const fieldDom: HTMLInputElement = form.querySelector(`#${formId}${item.field}`);
       let tempData: string[] = [];
       if (fieldDom.value) {
         tempData = fieldDom.value.split(",");
@@ -528,13 +542,13 @@ const onChangeCheckbox = (item: Filed, form: HTMLFormElement) => {
   });
 };
 
-const onChangeRadio = (item: Filed, form: HTMLFormElement) => {
-  const valdom: HTMLInputElement = form.querySelector(`#${item.field}`);
+const onChangeRadio = (item: Filed, form: HTMLFormElement, formId: string) => {
+  const valdom: HTMLInputElement = form.querySelector(`#${formId}${item.field}`);
   item.options.forEach((el: Option, i: number) => {
-    const radio: HTMLInputElement = form.querySelector(`#${item.field}${i}`);
+    const radio: HTMLInputElement = form.querySelector(`#${formId}${item.field}${i}`);
     radio.onchange = function () {
       if (radio.checked === true) {
-        const fieldDom: HTMLInputElement = form.querySelector(`#${item.field}`);
+        const fieldDom: HTMLInputElement = form.querySelector(`#${formId}${item.field}`);
         fieldDom.value = el.value;
       }
       const val = valdom.value;
@@ -543,16 +557,16 @@ const onChangeRadio = (item: Filed, form: HTMLFormElement) => {
   });
 };
 
-export const onChangeOther = (item: Filed, form: HTMLFormElement) => {
-  const target: HTMLInputElement = form.querySelector(`#${item.field}`);
+export const onChangeOther = (item: Filed, form: HTMLFormElement, formId: string) => {
+  const target: HTMLInputElement = form.querySelector(`#${formId}${item.field}`);
   target.onchange = function (e) {
     const val = (e.target as HTMLInputElement).value;
     handleValidate(val, item, target.parentNode as HTMLDivElement);
   };
 };
 
-const handlePicker = (item: Filed, form: HTMLFormElement, style: any) => {
-  const target: HTMLInputElement = form.querySelector(`#${item.field}`);
+const handlePicker = (item: Filed, form: HTMLFormElement, style: any, formId: string) => {
+  const target: HTMLInputElement = form.querySelector(`#${formId}${item.field}`);
   const wheels: any = item.options;
   const keyMap: any = item.keyMap;
   const cancelBtnText: string = item.cancelBtnText;
@@ -563,7 +577,7 @@ const handlePicker = (item: Filed, form: HTMLFormElement, style: any) => {
     value: "val";
   }> = {
     wheels,
-    trigger: `#${item.field}`,
+    trigger: `#${form.id}${item.field}`,
     keyMap,
     cancelBtnText,
     confirmBtnText,

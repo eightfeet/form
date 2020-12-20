@@ -23,7 +23,9 @@ export interface Filed {
     | "select"
     | "picker"
     | "textarea"
+    | "file"
     | "text";
+    accept?: string;
   options?: Option[];
   keyMap?: {
     [keys: string]: any;

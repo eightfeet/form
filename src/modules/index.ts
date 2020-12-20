@@ -47,16 +47,18 @@ class Form {
 	destory = () => {
 		const formDom:HTMLElement = document.getElementById(`form${this.id}`);
 		const formRoot:HTMLElement = document.getElementById(this.parentId) || document.body;
-		formRoot.removeChild(formDom);
+		formDom && formRoot.removeChild(formDom);
 		if (this.pickers?.length > 0) {
 			this.pickers.forEach(element => {
-				console.log(element);
+				element?.destroy();
 			});
+			this.pickers = []
 		}
+
+		console.log('this.pickers', this.pickers)
 	}
 }
 
-const aaa = new Form({});
-aaa.destory();
+(window as any).aaa = new Form({});
 
 export default Form;

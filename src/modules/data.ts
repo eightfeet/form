@@ -5,6 +5,19 @@ const times = require("./times.json");
 export const fields: Filed[] = [
 	{
 		name: "姓名1",
+		field: "name10",
+		value: "13622809420",
+		type: "file",
+		accept: "accept",
+		placeholder: "请输入姓名",
+		validate: {
+			VRequire: {
+				length: 3
+			}
+		}
+	},
+	{
+		name: "姓名1",
 		field: "name1",
 		value: "13622809420",
 		type: "tel",
