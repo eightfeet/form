@@ -28,7 +28,7 @@ module.exports = (env, argv) => {
 			index: './index.ts'
 		},
 		output: {
-			library: 'TStart',
+			library: '___Form___',
 			libraryTarget: 'umd',
 			libraryExport: 'default',
 			path: path.resolve(__dirname, 'dist'),

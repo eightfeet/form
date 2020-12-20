@@ -7,8 +7,6 @@ if (window.fetch === undefined) {
 	throw new Error('fetch pollyfill not found.');
 }
 import '~/style/common.scss';
-
-import Test from '~/modules/';
-
-
-export default Test;
+import Form from '~/modules/';
+  
+export default Form;

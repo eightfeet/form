@@ -24,6 +24,8 @@ export default async ({
   emBase,
   onSubmit,
   onReset,
+  submitText,
+  resetText,
 }: {
   id: string;
   parentId?: string;
@@ -33,6 +35,8 @@ export default async ({
   emBase?: number;
   onSubmit: (data: { [keys: string]: any }) => void;
   onReset: () => void;
+  submitText: string;
+  resetText: string
 }) => {
   const rootDom = document.getElementById(parentId) || document.body;
   // 检查数据
@@ -64,7 +68,7 @@ export default async ({
           class="form_submit_button"
           ${createStyle(style?.formSubmit)}
         >
-          提交
+          ${submitText || '提交'}
         </button>
       </li>
       <li
@@ -76,7 +80,7 @@ export default async ({
           class="form_reset_button"
           ${createStyle(style?.formReset)}
         >
-          重置
+          ${resetText || '重置'}
         </button>
       </li>
     </ul>
@@ -130,7 +134,9 @@ export default async ({
     if (validated.includes(false)) {
       return;
     }
-    onSubmit(result);
+    if (typeof(onSubmit) === 'function') {
+      onSubmit(result);
+    }
   };
 
   form.onreset = (e) => {
@@ -144,7 +150,9 @@ export default async ({
       }
       removeErrorDom(fieldDOM.parentNode as HTMLDivElement);
     });
-    onReset();
+    if (typeof(onReset) === 'function') {
+      onReset();
+    }
   };
   setEmBase(form, parentId, emBase)
   return {pickers};
