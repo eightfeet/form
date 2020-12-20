@@ -7,7 +7,7 @@ export declare enum FieldType {
     Picker = "picker",
     Textarea = "textarea"
 }
-export interface Filed {
+export interface Field {
     name: string;
     field: string;
     disabled?: boolean;

@@ -1,7 +1,7 @@
 import s from "./form.scss";
 import { html } from "common-tags";
 import { checkType, handleValidate, removeErrorDom } from "./../helper";
-import { Filed, FieldType, Option, Style } from "~/types/data";
+import { Field, FieldType, Option, Style } from "~/types/data";
 import Picker, { Option as pickerOption } from "@eightfeet/picker";
 import { createInlineStyles } from "@eightfeet/modal";
 import setEmBase from "~/core/setRem";
@@ -30,7 +30,7 @@ export default async ({
   id: string;
   parentId?: string;
   title?: string;
-  fields: Filed[];
+  fields: Field[];
   style?: Style;
   emBase?: number;
   onSubmit: (data: { [keys: string]: any }) => void;
@@ -92,7 +92,7 @@ export default async ({
   form.innerHTML = htmlString(form.id);
   rootDom.appendChild(form);
   // 绑定事件
-  fields.forEach((item: Filed) => {
+  fields.forEach((item: Field) => {
     switch (item.type) {
       case FieldType.Checkbox:
         onChangeCheckbox(item, form, form.id);
@@ -158,7 +158,7 @@ export default async ({
   return {pickers};
 };
 
-export const render = (config: Filed, style: Style, formId: string) => {
+export const render = (config: Field, style: Style, formId: string) => {
   const formItem = createStyle(style.formItem);
   const formItemLabel = createStyle(style.formItemLabel);
   const formItemContent = createStyle(style.formItemContent);
@@ -255,7 +255,7 @@ export const renderInput = (
     readonly,
     maxlength,
     accept,
-  }: Filed,
+  }: Field,
   formItemStyle: string,
   formItemLabelStyle: string,
   formItemContentStyle: string,
@@ -293,7 +293,7 @@ export const renderInput = (
 
 export const renderTextarea = (
   formId: string,
-  { name, field, value, type, placeholder, disabled, readonly }: Filed,
+  { name, field, value, type, placeholder, disabled, readonly }: Field,
   formItemStyle: string,
   formItemLabelStyle: string,
   formItemContentStyle: string,
@@ -329,7 +329,7 @@ ${value}</textarea
 };
 export const renderSelect = (
   formId: string,
-  { name, field, value, options, placeholder, disabled, readonly }: Filed,
+  { name, field, value, options, placeholder, disabled, readonly }: Field,
   formItemStyle: string,
   formItemLabelStyle: string,
   formItemContentStyle: string,
@@ -379,7 +379,7 @@ export const renderSelect = (
 
 export const renderRadio = (
   formId: string,
-  { name, options, field, value, disabled, readonly }: Filed,
+  { name, options, field, value, disabled, readonly }: Field,
   formItemStyle?: string,
   formItemLabelStyle?: string,
   formItemContentStyle?: string,
@@ -437,7 +437,7 @@ export const renderRadio = (
 
 export const renderCheckbox = (
   formId: string,
-  { name, field, value, options, disabled, readonly }: Filed,
+  { name, field, value, options, disabled, readonly }: Field,
   formItemStyle?: string,
   formItemLabelStyle?: string,
   formItemContentStyle?: string,
@@ -495,7 +495,7 @@ export const renderCheckbox = (
 
 export const renderPicker = (
   formId: string,
-  { name, field, value, placeholder, disabled, readonly }: Filed,
+  { name, field, value, placeholder, disabled, readonly }: Field,
   formItemStyle?: string,
   formItemLabelStyle?: string,
   formItemContentStyle?: string,
@@ -531,7 +531,7 @@ export const renderPicker = (
   `;
 };
 
-const onChangeCheckbox = (item: Filed, form: HTMLFormElement, formId: string) => {
+const onChangeCheckbox = (item: Field, form: HTMLFormElement, formId: string) => {
   const valdom: HTMLInputElement = form.querySelector(`#${formId}${item.field}`);
   item.options.forEach((el, i) => {
     const checkbox: HTMLInputElement = form.querySelector(`#${formId}${item.field}${i}`);
@@ -553,7 +553,7 @@ const onChangeCheckbox = (item: Filed, form: HTMLFormElement, formId: string) =>
   });
 };
 
-const onChangeRadio = (item: Filed, form: HTMLFormElement, formId: string) => {
+const onChangeRadio = (item: Field, form: HTMLFormElement, formId: string) => {
   const valdom: HTMLInputElement = form.querySelector(`#${formId}${item.field}`);
   item.options.forEach((el: Option, i: number) => {
     const radio: HTMLInputElement = form.querySelector(`#${formId}${item.field}${i}`);
@@ -568,7 +568,7 @@ const onChangeRadio = (item: Filed, form: HTMLFormElement, formId: string) => {
   });
 };
 
-export const onChangeOther = (item: Filed, form: HTMLFormElement, formId: string) => {
+export const onChangeOther = (item: Field, form: HTMLFormElement, formId: string) => {
   const target: HTMLInputElement = form.querySelector(`#${formId}${item.field}`);
   target.onchange = function (e) {
     const val = (e.target as HTMLInputElement).value;
@@ -576,7 +576,7 @@ export const onChangeOther = (item: Filed, form: HTMLFormElement, formId: string
   };
 };
 
-const handlePicker = (item: Filed, form: HTMLFormElement, style: any, formId: string) => {
+const handlePicker = (item: Field, form: HTMLFormElement, style: any, formId: string) => {
   const target: HTMLInputElement = form.querySelector(`#${formId}${item.field}`);
   const wheels: any = item.options;
   const keyMap: any = item.keyMap;

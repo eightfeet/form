@@ -1,4 +1,4 @@
-import { Filed } from "~/types/data";
+import { Field } from "~/types/data";
 import validate from "./validate";
 import s from './template/form.scss'
 
@@ -30,7 +30,7 @@ export const removeErrorDom = (dom: HTMLDivElement) => {
 
 export const handleValidate = (
   val: string,
-  item: Filed,
+  item: Field,
   dom: HTMLDivElement
 ):boolean => {
   if (Object.prototype.toString.call(item.validate) !== "[object Object]") {

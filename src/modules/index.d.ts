@@ -1,4 +1,4 @@
-import { Filed } from "~/types/data";
+import { Field } from "~/types/data";
 declare class Form {
     pickers: any[];
     id: string;
@@ -15,7 +15,7 @@ declare class Form {
         /**基准字体大小 */
         emBase?: number;
         /**表单字段 */
-        fields?: Filed[];
+        fields?: Field[];
         /**提交 */
         onSubmit?: (data: {
             [keys: string]: any;
@@ -29,7 +29,7 @@ declare class Form {
         /**重置按钮文字 */
         resetText?: string;
     });
-    initForm: (fields: Filed[], onSubmit?: (data: {
+    initForm: (fields: Field[], onSubmit?: (data: {
         [keys: string]: any;
     }) => void, onReset?: () => void, text?: {
         [keys: string]: string;

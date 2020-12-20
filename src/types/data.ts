@@ -9,7 +9,7 @@ export enum FieldType {
   Textarea = "textarea",
 }
 
-export interface Filed {
+export interface Field {
   name: string;
   field: string;
   disabled?: boolean;

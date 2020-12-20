@@ -1,8 +1,8 @@
-import { Filed } from "~/types/data";
+import { Field } from "~/types/data";
 
 const times = require("./times.json");
 
-export const fields: Filed[] = [
+export const fields: Field[] = [
 	{
 		name: "姓名1",
 		field: "name10",
