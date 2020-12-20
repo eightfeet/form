@@ -8,7 +8,7 @@ export const fields: Filed[] = [
 		field: "name10",
 		value: "13622809420",
 		type: "file",
-		accept: "accept",
+		accept: ".jpg",
 		placeholder: "请输入姓名",
 		validate: {
 			VRequire: {
