@@ -6,12 +6,22 @@ class Form {
   pickers: any[];
   id: string;
   parentId: string;
-  constructor({ id, parentId }: { id?: string; parentId?: string }) {
+  emBase: number;
+  constructor({
+    id,
+    parentId,
+    emBase,
+  }: {
+    id?: string;
+    parentId?: string;
+    emBase?: number;
+  }) {
     const stamp = `${new Date().getTime()}${window.Math.floor(
       window.Math.random() * 100
     )}`;
     this.id = id || stamp;
     this.parentId = parentId;
+    this.emBase = emBase;
     this.initForm();
   }
 
@@ -21,6 +31,7 @@ class Form {
       title: "表单标题",
       id: this.id,
       fields,
+      emBase: this.emBase,
       style: {
         formItemSubCheckboxIndicator: {},
         formPicker: {

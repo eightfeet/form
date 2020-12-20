@@ -36,10 +36,11 @@ export const fields: Filed[] = [
 	{
 		name: "姓名8",
 		field: "name8",
-		value: "13622809420",
+		value: "",
 		type: "textarea",
 		placeholder: "请输入姓名",
 		validate:{
+			VRequire: {},
 			VDangerousChar: {
 				Msg: '非规范字符'
 			}

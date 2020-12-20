@@ -4,6 +4,7 @@ import { checkType, handleValidate, removeErrorDom } from "./../helper";
 import { Filed, FieldType, Option, Style } from "~/types/data";
 import Picker, { Option as pickerOption } from "@eightfeet/picker";
 import { createInlineStyles } from "@eightfeet/modal";
+import setEmBase from "~/core/setRem";
 
 // 处理行内样式
 const createStyle = (style: any) => {
@@ -20,6 +21,7 @@ export default async ({
   title,
   fields,
   style,
+  emBase,
   onSubmit,
   onReset,
 }: {
@@ -28,6 +30,7 @@ export default async ({
   title?: string;
   fields: Filed[];
   style?: Style;
+  emBase?: number;
   onSubmit: (data: { [keys: string]: any }) => void;
   onReset: () => void;
 }) => {
@@ -143,7 +146,7 @@ export default async ({
     });
     onReset();
   };
-
+  setEmBase(form, parentId, emBase)
   return {pickers};
 };
 
