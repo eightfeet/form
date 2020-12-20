@@ -1,4 +1,4 @@
-import { Field } from "~/types/data";
+import { Field } from "./../types/data";
 
 const times = require("./times.json");
 

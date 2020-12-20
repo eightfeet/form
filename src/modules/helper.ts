@@ -1,4 +1,4 @@
-import { Field } from "~/types/data";
+import { Field } from "./../types/data";
 import validate from "./validate";
 import s from './template/form.scss'
 

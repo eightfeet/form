@@ -1,7 +1,7 @@
 import s from "./form.scss";
 import { html } from "common-tags";
 import { checkType, handleValidate, removeErrorDom } from "./../helper";
-import { Field, FieldType, Option, Style } from "~/types/data";
+import { Field, FieldType, Option, Style } from "./../../types/data";
 import Picker, { Option as pickerOption } from "@eightfeet/picker";
 import { createInlineStyles } from "@eightfeet/modal";
 import setEmBase from "~/core/setRem";
