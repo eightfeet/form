@@ -1,16 +1,16 @@
 {
   "name": "@eightfeet/form",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "",
   "scripts": {
-    "build:prod": "rm -rf ./lip && webpack --mode=production",
-    "build:uat": "rm -rf ./lip && webpack --mode=production --isuat=true",
+    "build:prod": "rm -rf ./lib && webpack --mode=production",
+    "build:uat": "rm -rf ./lib && webpack --mode=production --isuat=true",
     "dev": "webpack-dev-server --mode=development",
-    "report": "rm -rf ./lip && webpack --mode=production --report=true",
+    "report": "rm -rf ./lib && webpack --mode=production --report=true",
     "prepublish": "npm run build:prod"
   },
-  "main": "./lip/index.js",
-  "types": "./lip/index.d.ts",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
   "author": "eightfeet",
   "license": "ISC",
   "dependencies": {
