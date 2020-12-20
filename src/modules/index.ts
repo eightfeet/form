@@ -1,4 +1,6 @@
 import createForm from "./template";
+import { Filed } from "~/types/data";
+
 
 import { fields } from "./data";
 
@@ -11,10 +13,12 @@ class Form {
     id,
     parentId,
     emBase,
+    fields,
   }: {
     id?: string;
     parentId?: string;
     emBase?: number;
+    fields?: Filed[]
   }) {
     const stamp = `${new Date().getTime()}${window.Math.floor(
       window.Math.random() * 100
@@ -22,10 +26,10 @@ class Form {
     this.id = id || stamp;
     this.parentId = parentId;
     this.emBase = emBase;
-    this.initForm();
+    this.initForm(fields);
   }
 
-  initForm = () => {
+  initForm = (fields: Filed[]) => {
     createForm({
       parentId: this.parentId,
       title: "表单标题",
@@ -70,6 +74,8 @@ class Form {
   };
 }
 
-(window as any).aaa = new Form({});
+(window as any).aaa = new Form({
+  fields
+});
 
 export default Form;
