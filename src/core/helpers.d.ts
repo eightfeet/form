@@ -9,7 +9,7 @@ export declare function px2rem(px: number): number;
    * @export
    * @returns 1：浏览器，2: 微信，3：小程序
    */
-export declare function isWeChat(): 1 | 3 | 2;
+export declare function isWeChat(): 1 | 2 | 3;
 /**
  *
  * @param {number} times 次数

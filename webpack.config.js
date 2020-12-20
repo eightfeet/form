@@ -109,14 +109,14 @@ module.exports = (env, argv) => {
 									],
 									loader: 'css-loader',
 									options: {
-										sourceMap: !isPro
+										// sourceMap: !isPro
 									}
 								},
 								{
 									loader: 'css-loader',
 									options: {
 										modules: true,
-										sourceMap: !isPro,
+										// sourceMap: !isPro,
 										importLoaders: 1,
 										minimize: true
 									}
@@ -126,14 +126,14 @@ module.exports = (env, argv) => {
 						{
 							loader: 'postcss-loader',
 							options: {
-								sourceMap: !isPro
+								// sourceMap: !isPro
 							}
 						},
 						{
 							test: /\.(sass|scss)$/,
 							loader: 'sass-loader',
 							options: {
-								sourceMap: !isPro,
+								// sourceMap: !isPro,
 								data: '@import "variables.scss";',
 								includePaths: [path.resolve(__dirname, 'src/style')]
 							}
@@ -168,7 +168,7 @@ module.exports = (env, argv) => {
 			}),
 			new webpack.DefinePlugin(stringified),
 			new CopyWebpackPlugin([
-				{ from: './assets', to: './assets' }
+				// { from: './assets', to: './assets' }
 			]),
 			new ManifestPlugin()
 		]
