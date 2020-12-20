@@ -1,0 +1,22 @@
+{
+  "index.js": "index.js",
+  "actions.d.ts": "actions.d.ts",
+  "core/helpers.d.ts": "core/helpers.d.ts",
+  "core/login.d.ts": "core/login.d.ts",
+  "core/polyfill.d.ts": "core/polyfill.d.ts",
+  "core/request/compose.d.ts": "core/request/compose.d.ts",
+  "core/request/index.d.ts": "core/request/index.d.ts",
+  "core/request/middlewares.d.ts": "core/request/middlewares.d.ts",
+  "core/request/request.d.ts": "core/request/request.d.ts",
+  "core/request/utils.d.ts": "core/request/utils.d.ts",
+  "core/setRem.d.ts": "core/setRem.d.ts",
+  "index.d.ts": "index.d.ts",
+  "index.html": "index.html",
+  "modules/data.d.ts": "modules/data.d.ts",
+  "modules/helper.d.ts": "modules/helper.d.ts",
+  "modules/index.d.ts": "modules/index.d.ts",
+  "modules/template/index.d.ts": "modules/template/index.d.ts",
+  "modules/validate.d.ts": "modules/validate.d.ts",
+  "reducers.d.ts": "reducers.d.ts",
+  "types/data.d.ts": "types/data.d.ts"
+}
