@@ -33,7 +33,7 @@ module.exports = (env, argv) => {
 			libraryExport: 'default',
 			path: path.resolve(__dirname, 'dist'),
 			publicPath: process.env.PUBLIC_PATH,
-			filename: isPro ? 'bundle.[hash:6].js' : 'bundle.js'
+			filename: 'index.js'
 		},
 		resolve: {
 			extensions: ['.ts', '.tsx', '.jsx', '.js', '.json', '.less', '.scss', '.css'],

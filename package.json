@@ -10,6 +10,7 @@
     "report": "rm -rf ./dist && webpack --mode=production --report=true",
     "prepublish": "npm run build:prod"
   },
+  "main": "./dist/index.js",
   "author": "eightfeet",
   "license": "ISC",
   "dependencies": {
