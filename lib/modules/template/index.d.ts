@@ -1,4 +1,4 @@
-import { Field, Style } from "~/types/data";
+import { Field, Style } from "./../../types/data";
 declare const _default: ({ id, parentId, title, fields, style, emBase, onSubmit, onReset, submitText, resetText, }: {
     id: string;
     parentId?: string;

@@ -1,4 +1,4 @@
-import { Field } from "~/types/data";
+import { Field } from "./../types/data";
 export interface FormOptions {
     /**form id */
     id?: string;

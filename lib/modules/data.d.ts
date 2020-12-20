@@ -1,2 +1,2 @@
-import { Field } from "~/types/data";
+import { Field } from "./../types/data";
 export declare const fields: Field[];
