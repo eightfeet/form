@@ -7,14 +7,13 @@
     "build:prod": "rm -rf ./dist && webpack --mode=production",
     "build:uat": "rm -rf ./dist && webpack --mode=production --isuat=true",
     "dev": "webpack-dev-server --mode=development",
-    "report": "rm -rf ./dist && webpack --mode=production --report=true"
+    "report": "rm -rf ./dist && webpack --mode=production --report=true",
+    "prepublish": "npm run build"
   },
   "author": "eightfeet",
   "license": "ISC",
   "dependencies": {
     "@babel/runtime": "^7.1.2",
-    "@eightfeet/loading": "^1.0.14",
-    "@eightfeet/modal": "^2.0.0",
     "@eightfeet/picker": "^1.0.10",
     "@types/common-tags": "^1.8.0",
     "classnames": "^2.2.6",
